@@ -5,7 +5,7 @@ export function Button({text, href, onClick, isLeftEdge, isRightEdge} : {text: s
     let borderL = isLeftEdge ? "border-l-[#2F2B2B]" : "border-l-transparent";
     return (
         <a href={href} onClick={onClick}
-           className={`p-[5px_12px] bg-baseGray text-textColor border-[3px] border-solid border-transparent hover:border-solid hover:border-darkerGray`}>
+           className={`p-[5px_12px] bg-baseGray text-textColor border-[3px] border-solid border-transparent hover:border-solid hover:border-darkerGray overflow-hidden`}>
             {text}
         </a>
     )

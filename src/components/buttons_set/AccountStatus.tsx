@@ -1,6 +1,7 @@
-import {getServerSession} from "next-auth";
+import {getServerSession, Session} from "next-auth";
 import LoginButton from "@/components/buttons/LoginButton";
 import ConnectedMenu from "@/components/buttons/ConnectedMenu";
+import {getToken} from "next-auth/jwt";
 
 export default function AccountStatus() {
     return (getServerSession().then((session) => {

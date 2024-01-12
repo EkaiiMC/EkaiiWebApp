@@ -1,8 +1,18 @@
-import {NextAuthOptions} from "next-auth";
+
 import AzureAD from "next-auth/providers/azure-ad";
 import {JWT} from "next-auth/jwt";
+import { PrismaClient } from "@prisma/client";
+import {AuthOptions} from "next-auth";
 
-export const authOptions: NextAuthOptions = {
+interface AuthRequest {
+  method: string,
+  headers: { 'Content-Type': string, 'Accept'?: string, 'Authorization'?: string },
+  body?: string,
+}
+
+const prisma = new PrismaClient();
+
+export const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET!,
   providers: [
     AzureAD({
@@ -17,17 +27,24 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
+  pages: {
+    signIn: '/',
+    signOut: '/',
+    error: '/', // Error code passed in query string as ?error=
+    verifyRequest: '/', // (used for check email message)
+    newUser: '/' // If set, new users will be directed here on first sign in
+  },
+
+  session: {
+    strategy: 'jwt',
+  },
+
   callbacks: {
-    async jwt({token, user, account, profile}): Promise<JWT> {
-      console.log(token);
+    async jwt({token, account}): Promise<JWT> {
 
       // Xbox Live Auth
       const xboxLiveAuth: string = "https://user.auth.xboxlive.com/user/authenticate"
-      const request: {
-        method: string,
-        headers: { 'Content-Type': string, 'Accept'?: string, 'Authorization'?: string },
-        body: string
-      } = {
+      const request: AuthRequest = {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +94,7 @@ export const authOptions: NextAuthOptions = {
         "ensureLegacyEnabled": true
       });
 
-      /*res = await fetch("https://api.minecraftservices.com/authentication/login_with_xbox", request);
+      res = await fetch("https://api.minecraftservices.com/authentication/login_with_xbox", request);
       if (!res.ok) {
         if (res.status === 403) {
           json = await res.json();
@@ -90,15 +107,19 @@ export const authOptions: NextAuthOptions = {
 
       // Get Minecraft Profile
       request.headers["Authorization"] = `Bearer ${minecraftToken}`;
+      request.method = "GET";
+      delete request.body;
+
       res = await fetch("https://api.minecraftservices.com/minecraft/profile", request);
       if (!res.ok) {
+        json = await res.json();
+        console.log(json);
         throw new Error(`Failed to fetch profile information: ${res.statusText}`)
       }
       json = await res.json();
 
-      console.log(json);*/
-      console.log(token)
+      token["name"] = json["name"];
       return token;
-    }
+    },
   }
 };

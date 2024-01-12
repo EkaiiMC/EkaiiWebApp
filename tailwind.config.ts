@@ -28,6 +28,7 @@ const config: Config = {
     extend: {
       backgroundImage: ({ theme }) => ({
         navbarGradient: `linear-gradient(to bottom, ${theme('colors.navbarGradientStart')} 0%, ${theme('colors.navbarGradientVia1')} 36%, ${theme('colors.navbarGradientVia2')} 75%, ${theme('colors.navbarGradientEnd')} 100%)`,
+        mainBackground: 'url(/images/background-main.webp)',
         discord: 'url(/images/discord.svg)',
         discordHover: 'url(/images/discord-hover.svg)',
         github: 'url(/images/github.svg)',
