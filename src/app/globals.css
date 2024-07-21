@@ -3,31 +3,86 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+  --foreground-hex: #ededed;
+  --background-main-hex: #252322;
+  --background-footer-hex: #2f2c2b;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--foreground-hex);
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+main {
+  background-color: var(--background-main-hex);
+  font-size: 0;
+}
+
+.dropdown {
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transform: perspective(1000px);
+}
+
+.dropdown-menu {
+  list-style-type: none;
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  visibility: hidden;
+  z-index: -99999;
+}
+
+.dropdown-menu a, .dropdown-menu form {
+  display: inline-block;
+  width: 100%;
+  text-decoration: none;
+  -webkit-transition: all .5s;
+  transition: all .5s;
+}
+
+.dropdown:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  top: 100%;
+  -webkit-transition: all 1s, color, 1s .5s linear;
+  transition: all 1s, color 1s .5s linear;
+}
+
+.gallery-data-top, .gallery-data-bottom {
+  list-style-type: none;
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.gallery-data-top {
+  top: 0;
+}
+
+.gallery-data-bottom {
+  bottom: 0;
+}
+
+.gallery-image:hover .gallery-data-top {
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: all 1s, color, 1s .5s linear;
+  transition: all 1s, color 1s .5s linear;
+}
+
+.gallery-image:hover .gallery-data-bottom {
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: all 1s, color, 1s .5s linear;
+  transition: all 1s, color 1s .5s linear;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  background-color: #2f2c2b;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #e25697;
 }
