@@ -38,3 +38,6 @@ next-env.d.ts
 
 # uploaded files
 public/uploads
+
+# logs
+logs/
