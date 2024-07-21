@@ -1,0 +1,25 @@
+services:
+  app:
+    image: ekaii-web-app
+    build:
+      context: ./
+      target: dev
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    depends_on: [db]
+    environment:
+      - DATABASE_URL=postgres://ekaii:ekaii@db:5432/ekaii
+      - NEXT_WEBPACK_USEPOLLING=1
+  db:
+    image: postgres:alpine
+    environment:
+        POSTGRES_PASSWORD: ekaii
+        POSTGRES_USER: ekaii
+        POSTGRES_DB: ekaii
+    ports:
+      - "5432:5432"
