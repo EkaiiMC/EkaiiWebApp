@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 28.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 256 256" style="enable-background:new 0 0 256 256;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#3D3A39;}
+	.st1{fill:#B9348B;}
+	.st2{fill:#EA5297;}
+	.st3{fill:#ED6EA7;}
+	.st4{fill:#252321;}
+	.st5{fill:#312F2D;}
+</style>
+<g>
+	<polygon class="st0" points="208,128 208,96 192,96 192,64 176,64 176,48 144,48 144,32 112,32 112,48 80,48 80,64 64,64 64,96 
+		48,96 48,128 32,128 32,176 48,176 48,208 64,208 64,224 96,224 96,240 160,240 160,224 192,224 192,208 208,208 208,176 224,176 
+		224,128 	"/>
+	<polygon class="st1" points="112,64 112,48 80,48 80,64 64,64 64,96 80,96 80,80 96,80 96,64 	"/>
+	<polygon class="st2" points="80,112 80,80 96,80 96,64 128,64 128,96 112,96 112,112 	"/>
+	<rect x="112" y="64" class="st3" width="16" height="32"/>
+	<rect x="80" y="96" class="st3" width="32" height="16"/>
+	<rect x="112" y="32" class="st4" width="32" height="16"/>
+	<rect x="144" y="48" class="st4" width="32" height="16"/>
+	<rect x="64" y="208" class="st4" width="32" height="16"/>
+	<rect x="48" y="176" class="st4" width="16" height="32"/>
+	<rect x="48" y="96" class="st4" width="16" height="32"/>
+	<rect x="176" y="64" class="st4" width="16" height="32"/>
+	<rect x="192" y="96" class="st4" width="16" height="32"/>
+	<rect x="192" y="176" class="st4" width="16" height="32"/>
+	<rect x="32" y="128" class="st4" width="16" height="48"/>
+	<rect x="208" y="128" class="st4" width="16" height="48"/>
+	<rect x="160" y="208" class="st4" width="32" height="16"/>
+	<rect x="96" y="224" class="st4" width="64" height="16"/>
+	<rect x="160" y="48" class="st1" width="16" height="16"/>
+	<rect x="176" y="64" class="st1" width="16" height="16"/>
+	<rect x="176" y="192" class="st1" width="16" height="32"/>
+	<rect x="112" y="192" class="st1" width="16" height="16"/>
+	<rect x="112" y="224" class="st1" width="32" height="16"/>
+	<rect x="32" y="160" class="st1" width="16" height="16"/>
+	<rect x="32" y="144" class="st1" width="16" height="16"/>
+	<rect x="160" y="112" class="st1" width="16" height="32"/>
+	<rect x="192" y="176" class="st1" width="16" height="32"/>
+	<rect x="128" y="176" class="st1" width="16" height="32"/>
+	<rect x="160" y="64" class="st2" width="16" height="16"/>
+	<rect x="144" y="112" class="st2" width="16" height="16"/>
+	<rect x="176" y="176" class="st2" width="16" height="16"/>
+	<rect x="192" y="160" class="st2" width="16" height="16"/>
+	<rect x="160" y="176" class="st2" width="16" height="32"/>
+	<rect x="112" y="176" class="st2" width="16" height="16"/>
+	<rect x="96" y="176" class="st2" width="16" height="16"/>
+	<rect x="96" y="192" class="st2" width="16" height="16"/>
+	<rect x="80" y="128" class="st2" width="16" height="16"/>
+	<rect x="48" y="160" class="st2" width="16" height="16"/>
+	<rect x="160" y="80" class="st3" width="16" height="16"/>
+	<rect x="144" y="128" class="st3" width="16" height="16"/>
+	<rect x="96" y="128" class="st3" width="16" height="16"/>
+	<rect x="112" y="160" class="st3" width="16" height="16"/>
+	<rect x="80" y="144" class="st3" width="16" height="16"/>
+	<rect x="48" y="144" class="st3" width="16" height="16"/>
+	<polygon class="st5" points="128,176 144,176 144,208 96,208 96,224 160,224 160,176 192,176 192,160 208,160 208,128 192,128 
+		192,96 176,96 176,112 176,112 176,144 128,144 	"/>
+	<polygon class="st5" points="64,176 80,176 80,192 96,192 96,208 64,208 	"/>
+	<rect x="128" y="48" class="st5" width="16" height="16"/>
+	<rect x="144" y="64" class="st5" width="16" height="16"/>
+	<rect x="112" y="80" class="st3" width="16" height="16"/>
+</g>
+</svg>
