@@ -11,7 +11,7 @@ export default async function Gallery() {
             {image.title}
           </p>
         </div>
-        <img src={image.imagePath} alt={image.title} key={image.id} className={'h-[360px] border-4 border-bgDarkGray bg-bgLightGray'}/>
+        <Image src={image.imagePath} alt={image.title} key={image.id} width={1920} height={1080} className={'h-[360px] w-auto border-4 border-bgDarkGray bg-bgLightGray'}/>
         <div className={'gallery-data-bottom bg-galleryGradientTop h-1/2 w-full'}>
           <p className={'absolute bottom-0 text-center mb-3 w-full'}>
             {image.description}
