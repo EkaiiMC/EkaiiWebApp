@@ -2,6 +2,8 @@ import NextAuth from 'next-auth'
 import {PrismaAdapter} from "@auth/prisma-adapter";
 import MicrosoftEntraID from "@auth/core/providers/microsoft-entra-id";
 import prisma from "@/db";
+import {addDashes} from "@/utils";
+import {logger} from "@/logger";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -96,13 +98,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     if(minecraftProfile.ok) {
                       const minecraftProfileRes = (await minecraftProfile.json()) as { id: string, name: string };
 
-                      return {
-                        id: minecraftProfileRes.id,
+                      minecraftProfileRes.id = addDashes(minecraftProfileRes.id)
+
+                      const obj = {
+                        uuid: minecraftProfileRes.id,
                         name: minecraftProfileRes.name,
                         email: decoded.email,
                         image: 'https://mc-heads.net/avatar/'+minecraftProfileRes.name+'/256',
-                        role: 'USER'
+                        role: 'USER',
                       }
+
+                      logger.debug(`User ${obj.name} logged in`)
+
+                      return obj
                     }
                   }
                 }
