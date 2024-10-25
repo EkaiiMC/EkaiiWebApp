@@ -60,7 +60,7 @@ export async function Pack({className, type}: {className?: string, type: "ekaii-
 
   const olderReleases = await fetch(`https://api.github.com/repos/EkaiiMC/${repo}/releases`);
   if(!olderReleases.ok) throw new Error('Failed to fetch older releases');
-  const olderReleasesJson : {tag_name: string, html_url: string}[] = (await olderReleases.json()).slice(0,3);
+  const olderReleasesJson : {tag_name: string, html_url: string}[] = (await olderReleases.json()).slice(0,4);
   const olderReleasesList : ReactNode[] = olderReleasesJson.map(release => {
     if (release.tag_name === latestVersion) return;
     return (

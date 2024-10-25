@@ -9,7 +9,8 @@ import {
 } from "@/api-auth";
 import {auth} from "@/auth";
 
-export async function GET(req: NextRequest, {params} : {params: {name: string}}) {
+export async function GET(req: NextRequest, props: {params: Promise<{name: string}>}) {
+  const params = await props.params;
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();
@@ -34,7 +35,8 @@ export async function GET(req: NextRequest, {params} : {params: {name: string}})
   return NextResponse.json({name: params.name, scopes: perms});
 }
 
-export async function PATCH(req: NextRequest, {params} : {params: {name: string}}) {
+export async function PATCH(req: NextRequest, props: {params: Promise<{name: string}>}) {
+  const params = await props.params;
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();
@@ -71,7 +73,8 @@ export async function PATCH(req: NextRequest, {params} : {params: {name: string}
   return NextResponse.json({message: 'Permissions updated'}, {status: 200});
 }
 
-export async function DELETE(req: NextRequest, {params} : {params: {name: string}}) {
+export async function DELETE(req: NextRequest, props: {params: Promise<{name: string}>}) {
+  const params = await props.params;
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();

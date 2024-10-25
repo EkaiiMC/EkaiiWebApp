@@ -10,11 +10,12 @@
     "test": "jest"
   },
   "dependencies": {
-    "@auth/core": "^0.34.1",
+    "@auth/core": "^0.37.2",
     "@auth/prisma-adapter": "^2.4.1",
     "@prisma/client": "^5.17.0",
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.3",
+
     "next": "^14.2.5",
     "next-auth": "^5.0.0-beta.19",
     "react": "^18.3.1",
@@ -22,6 +23,7 @@
     "react-device-detect": "^2.2.3",
     "react-dom": "^18.3.1",
     "react-modal": "^3.16.1",
+    "votifier": "^0.0.0",
     "winston": "^3.13.1",
     "winston-transport": "^4.7.1"
   },

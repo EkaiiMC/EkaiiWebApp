@@ -3,6 +3,7 @@ import {ReactNode, Suspense} from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {logger} from "@/logger";
+import Footer from "@/components/footer";
 
 function StickyBackground({ text, type }: {text: string, type: "home" | "other" }) {
   const bgClass = type === "home" ? "bg-homeBackground" : "bg-defaultBackground";
@@ -51,7 +52,7 @@ function SocialButtons() {
           <p className={"relative top-[85%] text-lg text-nowrap"}>Discord</p>
         </Link>
         <a href="https://github.com/EkaiiMC"
-           className={`relative inline-block w-[64px] h-[50px] text-baseText hover:text-pinkText text-center bg-github bg-[position:top_center] bg-no-repeat bg-[length:48px_48px] hover:bg-githubHover ease-out duration-500 transition-all`}>
+           className={`relative inline-block w-[64px] h-[50px] text-baseText hover:text-pinkText text-center bg-github bg-[position:top_center] bg-no-repeat bg-[length:48px_48px] hover:bg-githubHover ease-out duration-500 transition-all ml-2`}>
           <p className={"relative top-[85%] text-lg text-nowrap"}>Github</p>
         </a>
       </div>
