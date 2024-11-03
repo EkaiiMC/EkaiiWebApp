@@ -46,10 +46,11 @@ export async function Pack({className, type}: {className?: string, type: "ekaii-
   const typeLogo = type === 'ekaii-lite' ? '/images/ekaii-lite.svg' : '/images/ekaii-plus.svg';
   const repo = type === 'ekaii-lite' ? 'EkaiiLite' : 'EkaiiPlus';
 
-  const latestRelease = await fetch(`https://api.github.com/repos/EkaiiMC/${repo}/releases/latest`);
+  const latestRelease = await fetch(`https://api.github.com/repos/EkaiiMC/${repo}/releases/latest`, {cache: 'no-cache'});
   if(!latestRelease.ok) throw new Error('Failed to fetch latest release');
   const latestReleaseJson : {tag_name: string, html_url: string, assets: {name: string, browser_download_url: string}[]} = await latestRelease.json();
   const latestVersion = latestReleaseJson.tag_name;
+  console.log(latestReleaseJson);
   const latestReleaseUrl = latestReleaseJson.html_url;
   let curseforgeUrl = '';
   let modrinthUrl = '';
@@ -58,7 +59,7 @@ export async function Pack({className, type}: {className?: string, type: "ekaii-
     if(asset.name.includes('modrinth')) modrinthUrl = asset.browser_download_url;
   });
 
-  const olderReleases = await fetch(`https://api.github.com/repos/EkaiiMC/${repo}/releases`);
+  const olderReleases = await fetch(`https://api.github.com/repos/EkaiiMC/${repo}/releases`, {cache: 'no-cache'});
   if(!olderReleases.ok) throw new Error('Failed to fetch older releases');
   const olderReleasesJson : {tag_name: string, html_url: string}[] = (await olderReleases.json()).slice(0,4);
   const olderReleasesList : ReactNode[] = olderReleasesJson.map(release => {

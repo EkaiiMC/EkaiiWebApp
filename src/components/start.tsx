@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {logger} from "@/logger";
 import Footer from "@/components/footer";
+import {getServerStatus} from "@/utils";
 
 function StickyBackground({ text, type }: {text: string, type: "home" | "other" }) {
   const bgClass = type === "home" ? "bg-homeBackground" : "bg-defaultBackground";
@@ -28,16 +29,9 @@ function ServerStatusSkeleton(props : {statusColor?: string, statusText?: string
 }
 
 async function ServerStatus() {
-  const res = (await fetch(process.env.URL+"/api/server/status"));
-  let online : boolean = false;
-  let players : number = 0;
-  if(!res.ok) {
-    logger.error("Failed to fetch server status", {status: res.status, statusText: res.statusText});
-  } else {
-    const reqStatus = await res.json();
-    online = reqStatus.isOnline;
-    players = reqStatus.onlinePlayers;
-  }
+  const res = await getServerStatus();
+  const online = res.isOnline;
+  const players = res.onlinePlayers;
   const statusColor = online ? "text-greenText" : "text-redText";
   const statusText = online ? "ON" : "OFF";
   return ServerStatusSkeleton({statusColor, statusText, players});

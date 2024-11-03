@@ -8,9 +8,6 @@ const nextConfig = {
             },
         ],
     },
-    experimental: {
-        instrumentationHook: true,
-    },
     reactStrictMode: true,
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
         config.plugins.push(

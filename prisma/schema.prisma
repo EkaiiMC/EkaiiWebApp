@@ -4,7 +4,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["views", "postgresqlExtensions"]
 }
 
 model User {
@@ -159,4 +160,9 @@ model VoteSite {
   votes     Vote[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+view Leaderboard {
+  username  String @unique
+  voteCount Int
 }
