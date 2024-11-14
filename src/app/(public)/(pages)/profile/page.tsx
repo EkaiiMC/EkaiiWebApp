@@ -1,6 +1,8 @@
 import {auth} from "@/auth";
 import {redirect} from "next/navigation";
 import Image from "next/image";
+import {Session} from "@auth/core/types";
+import prisma from "@/db";
 
 export default async function Profile() {
   const session = await auth();
@@ -10,7 +12,7 @@ export default async function Profile() {
   }
 
   // @ts-ignore -
-  const user : {name: string, role: string, createdAt: string, image: string} = session.user;
+  const user : {name: string, role: string, createdAt: string, image: string, id: string} = session.user;
   const role = (() => {
     switch (user.role) {
       case "MAINTAINER":
@@ -50,26 +52,33 @@ export default async function Profile() {
         return "/images/roles/member.svg";
     }
   })();
+  const votes = await prisma.leaderboard.findFirst({
+    where: {
+      userId: user.id
+    }
+  });
+  const voteCount = votes ? votes.voteCount : 0;
+  const rank = votes ? ('# ' + votes.rank) : 'Pas de rang';
 
 
   return (
     <div className={''}>
       <div className={"w-2/3 shadow-underline m-auto"}>
-        <h1 className={'text-4xl font-monocraft'}>Profil : {user.name}</h1>
-        <div className={"flex justify-between w-full mt-7 pb-7 items-start pr-3"}>
-          <Image src={user.image} width={128} height={128} alt={`Photo de profil d'${user.name}`} className={"border-bgDarkGray border-[3px] shadow-xl bg-bgLightGray"}/>
-          <div className={"w-full pl-10"}>
+        <h1 className={'text-2xl md:text-4xl font-monocraft'}>Profil : {user.name}</h1>
+        <div className={"flex flex-col md:flex-row justify-between w-full mt-7 pb-7 items-start pr-3 flex-grow-[2]"}>
+          <Image src={user.image} width={128} height={128} alt={`Photo de profil d'${user.name}`} className={"mx-auto border-bgDarkGray border-[3px] shadow-xl bg-bgLightGray"}/>
+          <div className={"w-full mt-4 md:mt-0 md:pl-10 text-left"}>
             <h3 className={'text-xl'}>Inscrit depuis le : <span className={'font-medium'}>{date}</span></h3>
             <h3 className={'text-xl'}>Grade : <span className={'font-medium'}>{role}</span></h3>
 
-            <h3 className={'text-xl mt-6'}>Classement des votes : <span className={'font-medium'}>Coming soon...</span></h3>
-            <h3 className={'text-xl'}>Nombre de votes : <span className={'font-medium'}>Coming soon...</span></h3>
+            <h3 className={'text-xl mt-6'}>Classement des votes : <span className={'font-medium'}>{rank}</span></h3>
+            <h3 className={'text-xl'}>Nombre de votes : <span className={'font-medium'}>{voteCount} votes</span></h3>
           </div>
-          <Image src={roleImage} alt={role} width={128} height={128} className={""}/>
+          <Image src={roleImage} alt={role} width={128} height={128} className={"hidden navbar:block"}/>
         </div>
       </div>
       <div className={"w-2/3 shadow-underline m-auto"}>
-        <h2 className={'text-4xl font-monocraft mt-10'}>Cosmétiques</h2>
+        <h2 className={'text-2xl sm:text-4xl font-monocraft mt-10'}>Cosmétiques</h2>
         <p className={'text-lg mt-3'}>Coming soon...</p>
       </div>
     </div>

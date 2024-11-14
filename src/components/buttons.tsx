@@ -70,7 +70,53 @@ export async function LoginButton() {
 
   return (
     <div
-      className={'p-[5px_12px] ml-1 bg-bgGray text-baseText border-[3px] border-bgLightGray hover:border-solid hover:border-bgDarkGray text-nowrap text-center cursor-default flex dropdown ease-out duration-500 transition-all'}>
+      className={'p-[5px_12px] ml-1 bg-bgGray text-baseText border-[3px] border-bgLightGray hover:border-solid hover:border-bgDarkGray text-nowrap text-center cursor-default flex dropdown ease-out duration-500 transition-all h-full navbar:h-auto'}>
+      {elmt}
+    </div>
+  )
+}
+
+export async function DropdownLoginButton() {
+  const session = await auth();
+
+  let elmt: ReactNode;
+
+  if (!session || !session.user) {
+    elmt = (
+      <form
+        action={async () => {
+          "use server"
+          await signIn("microsoft-entra-id")
+        }}
+        className={'mt-auto mb-auto'}
+      >
+        <button type={'submit'}>Se connecter</button>
+      </form>
+    )
+  } else { // session is not null, we are logged in
+    elmt = (
+      <>
+        <Link href={'/profile'} className={'flex items-center'}>
+          <div
+            className={'border-[0.13rem] border-[#178903] bg-[#67DB29] mr-2 w-3 h-3 min-w-3 min-h-3 mt-auto mb-auto'}/>
+          <p className={'relative top-[0.05rem]'}>{session.user.name}</p>
+        </Link>
+        <form action={
+          async () => {
+            "use server"
+            await signOut()
+          }
+        } className={''}>
+          <button type={'submit'}
+                  className={'relative top-[0.170rem] my-auto h-[16px] w-[16px] bg-no-repeat bg-[length:16px_16px] bg-logout hover:bg-logoutHover transition-all ease-out duration-500'}/>
+        </form>
+      </>
+    )
+  }
+
+  return (
+    <div
+      className={'flex justify-between px-4 pt-1.5 pb-2.5 text-sm border-x-bgLightGray login:border-b-bgLightGray border-b-bgLightGray border-[3px] border-t-transparent hover:border-bgDarkGray ease-out duration-500 transition-all h-[42px]'}>
       {elmt}
     </div>
   )

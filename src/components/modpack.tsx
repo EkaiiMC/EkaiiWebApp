@@ -46,11 +46,10 @@ export async function Pack({className, type}: {className?: string, type: "ekaii-
   const typeLogo = type === 'ekaii-lite' ? '/images/ekaii-lite.svg' : '/images/ekaii-plus.svg';
   const repo = type === 'ekaii-lite' ? 'EkaiiLite' : 'EkaiiPlus';
 
-  const latestRelease = await fetch(`https://api.github.com/repos/EkaiiMC/${repo}/releases/latest`, {cache: 'no-cache'});
+  const latestRelease = await fetch(`https://api.github.com/repos/EkaiiMC/${repo}/releases/latest`, { next: { revalidate : 60 * 60 * 12 } });
   if(!latestRelease.ok) throw new Error('Failed to fetch latest release');
   const latestReleaseJson : {tag_name: string, html_url: string, assets: {name: string, browser_download_url: string}[]} = await latestRelease.json();
   const latestVersion = latestReleaseJson.tag_name;
-  console.log(latestReleaseJson);
   const latestReleaseUrl = latestReleaseJson.html_url;
   let curseforgeUrl = '';
   let modrinthUrl = '';
@@ -59,7 +58,7 @@ export async function Pack({className, type}: {className?: string, type: "ekaii-
     if(asset.name.includes('modrinth')) modrinthUrl = asset.browser_download_url;
   });
 
-  const olderReleases = await fetch(`https://api.github.com/repos/EkaiiMC/${repo}/releases`, {cache: 'no-cache'});
+  const olderReleases = await fetch(`https://api.github.com/repos/EkaiiMC/${repo}/releases`, { next: { revalidate : 60 * 60 * 12 } });
   if(!olderReleases.ok) throw new Error('Failed to fetch older releases');
   const olderReleasesJson : {tag_name: string, html_url: string}[] = (await olderReleases.json()).slice(0,4);
   const olderReleasesList : ReactNode[] = olderReleasesJson.map(release => {
@@ -71,10 +70,10 @@ export async function Pack({className, type}: {className?: string, type: "ekaii-
 
   return (
     <div className={className}>
-      <div className={'w-[200px] p-3 ml-3 mt-auto mb-auto'}>
+      <div className={'w-[200px] p-3 mx-auto lg:ml-3 mt-auto mb-auto'}>
         <Image src={typeLogo} width={583} height={512} alt={`logo ${type}`}/>
       </div>
-      <div className={'flex flex-col items-center p-3 w-2/5'}>
+      <div className={'flex flex-col items-center p-3 w-full lg:w-2/5 '}>
         <h2 className={'text-2xl text-left w-full shadow-underline'}>{latestVersion}</h2>
         <div className={'flex flex-col items-center w-full mt-5 text-xl'}>
           <GrayButton href={latestReleaseUrl} text={'Github'} />
@@ -82,7 +81,7 @@ export async function Pack({className, type}: {className?: string, type: "ekaii-
           <PinkButton href={modrinthUrl} text={'Modrinth/MultiMC (.mrpack)'}/>
         </div>
       </div>
-      <div className={'flex flex-col items-center p-3 w-2/5'}>
+      <div className={'flex flex-col items-center p-3 w-full lg:w-2/5'}>
         <h2 className={'text-2xl text-left w-full shadow-underline'}>Anciennes versions</h2>
         <div className={'flex flex-col items-center w-full mt-5 text-xl'}>
           {olderReleasesList}

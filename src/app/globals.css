@@ -96,3 +96,34 @@ main {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+.nav-transition {
+  transition: background-image 0.5s ease;
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 20px;
+}
+
+.bar {
+  width: 100%;
+  height: 3px;
+  background-color: #ededed;
+  transition: all 0.3s ease;
+}
+
+.bar1-open {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.bar2-open {
+  opacity: 0;
+}
+
+.bar3-open {
+  transform: rotate(-45deg) translate(6px, -6px);
+}

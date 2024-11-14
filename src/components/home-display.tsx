@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function HomeDisplay({icon, name, content, link} : {icon: string, name: string, content: string, link: {href: string, text: string}}) {
   return (
-    <div className={"relative flex flex-col m-[0px_30px] p-7 bg-bgLightGray shadow-[0px_0px_10px] shadow-bgDarkGray text-lg justify-between"}>
+    <div className={"relative flex flex-col m-[30px_30px] p-7 bg-bgLightGray shadow-[0px_0px_10px] shadow-bgDarkGray text-lg justify-between"}>
       <div className={"absolute inline-block w-[64px] h-[64px] -top-[35px] left-1/2 -translate-x-1/2"}>
         <Image
           src={icon}

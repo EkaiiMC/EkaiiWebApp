@@ -104,6 +104,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                       const obj = {
                         id: minecraftProfileRes.id,
                         name: minecraftProfileRes.name,
+                        username: minecraftProfileRes.name,
                         email: decoded.email,
                         image: 'https://mc-heads.net/avatar/'+minecraftProfileRes.name+'/256',
                       }
@@ -125,9 +126,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   })],
   callbacks: {
     async session({session, user}) {
+
+      await prisma.account.update({
+        where: {
+          userId: user.id,
+        },
+        data: {
+          access_token: null
+        },
+      });
+
       // @ts-ignore
       session.user.role = user.role;
       return session;
     },
+  },
+  pages: {
+    signIn: '/login',
+    signOut: '/logout',
+    error: '/auth-error',
   }
 })

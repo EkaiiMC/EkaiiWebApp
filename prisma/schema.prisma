@@ -163,6 +163,8 @@ model VoteSite {
 }
 
 view Leaderboard {
+  userId    String @id
   username  String @unique
   voteCount Int
+  rank      Int
 }

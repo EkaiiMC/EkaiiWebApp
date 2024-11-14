@@ -223,17 +223,19 @@ ALTER TABLE "_ProjectToUser" ADD CONSTRAINT "_ProjectToUser_B_fkey" FOREIGN KEY 
 -- Create the materialized view
 CREATE MATERIALIZED VIEW "Leaderboard" AS
 SELECT
+  rank() OVER (ORDER BY COUNT(v.id) DESC) AS "rank",
   u.name AS username,
+  u.id AS "userId",
   COUNT(v.id) AS "voteCount"
 FROM
   "Vote" as v
 JOIN
   "User" u ON v."userId" = u.id
 GROUP BY
-  u.name
+  u.name,
+  u.id
 ORDER BY
-  "voteCount" DESC
-LIMIT 20;
+  "voteCount" DESC;
 
 -- Create the function to refresh the materialized view
 CREATE OR REPLACE FUNCTION refresh_leaderboard()

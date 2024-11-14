@@ -32,7 +32,7 @@ export async function GET(req: NextRequest, props: {params: Promise<{username: s
 
   const playerUuid = await fetch( `https://api.mojang.com/users/profiles/minecraft/${params.username}`, {
     method: 'GET',
-    cache: 'no-cache',
+    cache: 'default',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
@@ -92,7 +92,7 @@ export async function POST(req: NextRequest, props: {params: Promise<{username: 
 
   const playerUuid = await fetch( `https://api.mojang.com/users/profiles/minecraft/${params.username}`, {
     method: 'GET',
-    cache: 'no-cache',
+    cache: 'default',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
