@@ -12,7 +12,7 @@ services:
   app:
     build:
       context: ./
-      target: dev
+      target: prod
       dockerfile: ./docker/web/Dockerfile
     volumes:
       - .:/app
@@ -23,4 +23,3 @@ services:
     depends_on: [ db ]
     environment:
       - DATABASE_URL=postgres://ekaii:ekaii@db:5432/ekaii
-      - NEXT_WEBPACK_USEPOLLING=1
