@@ -3,7 +3,8 @@ import {checkAccess, isWhitelisterOrMore} from "@/api-auth";
 import {addDashes} from "@/utils";
 import {auth} from "@/auth";
 
-export async function GET(req: NextRequest, {params} : {params: {username: string}}) {
+export async function GET(req: NextRequest, props: {params: Promise<{username: string}>}) {
+  const params = await props.params;
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();
@@ -31,7 +32,7 @@ export async function GET(req: NextRequest, {params} : {params: {username: strin
 
   const playerUuid = await fetch( `https://api.mojang.com/users/profiles/minecraft/${params.username}`, {
     method: 'GET',
-    cache: 'no-cache',
+    cache: 'default',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
@@ -60,10 +61,10 @@ export async function GET(req: NextRequest, {params} : {params: {username: strin
   } catch (e) {
     return NextResponse.json({message: 'Server offline'}, {status: 503});
   }
-
 }
 
-export async function POST(req: NextRequest, {params} : {params: {username: string}}) {
+export async function POST(req: NextRequest, props: {params: Promise<{username: string}>}) {
+  const params = await props.params;
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();
@@ -91,7 +92,7 @@ export async function POST(req: NextRequest, {params} : {params: {username: stri
 
   const playerUuid = await fetch( `https://api.mojang.com/users/profiles/minecraft/${params.username}`, {
     method: 'GET',
-    cache: 'no-cache',
+    cache: 'default',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
@@ -122,7 +123,8 @@ export async function POST(req: NextRequest, {params} : {params: {username: stri
   }
 }
 
-export async function DELETE(req: NextRequest, {params} : {params: {username: string}}) {
+export async function DELETE(req: NextRequest, props: {params: Promise<{username: string}>}) {
+  const params = await props.params;
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();

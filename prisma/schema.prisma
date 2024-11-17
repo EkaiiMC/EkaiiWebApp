@@ -4,7 +4,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["views", "postgresqlExtensions"]
 }
 
 model User {
@@ -15,7 +16,6 @@ model User {
   role          Role      @default(USER)
   emailVerified DateTime?
   image         String?
-  uuid          String    @unique
   Session       Session[]
   Account       Account?
   votes         Vote[]
@@ -154,12 +154,17 @@ enum TaskStatus {
 }
 
 model VoteSite {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  url         String
-  image       String
-  votes       Vote[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  title     String   @unique
+  url       String   @unique
+  votes     Vote[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+view Leaderboard {
+  userId    String @id
+  username  String @unique
+  voteCount Int
+  rank      Int
 }

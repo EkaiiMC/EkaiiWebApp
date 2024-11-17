@@ -12,6 +12,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        navbar: '982px',
+        login: '400px'
+      },
       colors: {
         transparent: "transparent",
         baseText: "#ededed",
@@ -35,6 +39,7 @@ const config: Config = {
       },
       backgroundImage: ({ theme }) => ({
         navbarGradient: `linear-gradient(to bottom, ${theme('colors.navbarGradientStart')} 0%, ${theme('colors.navbarGradientVia1')} 36%, ${theme('colors.navbarGradientVia2')} 75%, ${theme('colors.navbarGradientEnd')} 100%)`,
+        navbarMobileGradient: `linear-gradient(to bottom, black 0%, transparent 100%)`,
         galleryGradientTop: `linear-gradient(to top, ${theme('colors.navbarGradientStart')} 0%, ${theme('colors.navbarGradientVia1')} 36%, ${theme('colors.navbarGradientVia2')} 75%, ${theme('colors.navbarGradientEnd')} 100%)`,
         galleryGradientBottom: `linear-gradient(to bottom, ${theme('colors.navbarGradientStart')} 0%, ${theme('colors.navbarGradientVia1')} 36%, ${theme('colors.navbarGradientVia2')} 75%, ${theme('colors.navbarGradientEnd')} 100%)`,
         homeBackground: 'url(/images/background-main.webp)',

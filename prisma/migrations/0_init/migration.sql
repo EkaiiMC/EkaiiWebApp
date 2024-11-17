@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('USER', 'MEMBER', 'WHITELISTER', 'DESIGNER', 'DEVELOPER', 'MAINTAINER');
 
+-- CreateEnum
+CREATE TYPE "TaskStatus" AS ENUM ('OPEN', 'IN_PROGRESS', 'DONE');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -60,6 +63,7 @@ CREATE TABLE "VerificationToken" (
 CREATE TABLE "Vote" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "siteId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -84,7 +88,7 @@ CREATE TABLE "ApiKey" (
     "id" TEXT NOT NULL,
     "key" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "scopes" TEXT,
+    "scopes" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -103,6 +107,48 @@ CREATE TABLE "ApiLog" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "ApiLog_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Project" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Task" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT,
+    "assigneeId" TEXT,
+    "projectId" TEXT NOT NULL,
+    "status" "TaskStatus" NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "VoteSite" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "VoteSite_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "_ProjectToUser" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
 );
 
 -- CreateIndex
@@ -135,6 +181,18 @@ CREATE UNIQUE INDEX "ApiKey_key_key" ON "ApiKey"("key");
 -- CreateIndex
 CREATE UNIQUE INDEX "ApiKey_name_key" ON "ApiKey"("name");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "VoteSite_title_key" ON "VoteSite"("title");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "VoteSite_url_key" ON "VoteSite"("url");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_ProjectToUser_AB_unique" ON "_ProjectToUser"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_ProjectToUser_B_index" ON "_ProjectToUser"("B");
+
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -145,4 +203,53 @@ ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Vote" ADD CONSTRAINT "Vote_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Vote" ADD CONSTRAINT "Vote_siteId_fkey" FOREIGN KEY ("siteId") REFERENCES "VoteSite"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "ApiLog" ADD CONSTRAINT "ApiLog_apiKeyId_fkey" FOREIGN KEY ("apiKeyId") REFERENCES "ApiKey"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Task" ADD CONSTRAINT "Task_assigneeId_fkey" FOREIGN KEY ("assigneeId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Task" ADD CONSTRAINT "Task_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProjectToUser" ADD CONSTRAINT "_ProjectToUser_A_fkey" FOREIGN KEY ("A") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_ProjectToUser" ADD CONSTRAINT "_ProjectToUser_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- Create the materialized view
+CREATE MATERIALIZED VIEW "Leaderboard" AS
+SELECT
+  rank() OVER (ORDER BY COUNT(v.id) DESC) AS "rank",
+  u.name AS username,
+  u.id AS "userId",
+  COUNT(v.id) AS "voteCount"
+FROM
+  "Vote" as v
+JOIN
+  "User" u ON v."userId" = u.id
+GROUP BY
+  u.name,
+  u.id
+ORDER BY
+  "voteCount" DESC;
+
+-- Create the function to refresh the materialized view
+CREATE OR REPLACE FUNCTION refresh_leaderboard()
+RETURNS VOID AS $$
+BEGIN
+  REFRESH MATERIALIZED VIEW "Leaderboard";
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create the trigger on the Vote table
+DO $$
+BEGIN
+IF current_database() = 'ekaii' THEN
+  CREATE EXTENSION IF NOT EXISTS pg_cron;
+  PERFORM cron.schedule('refresh_leaderboard', '*/5 * * * *', 'SELECT refresh_leaderboard()');
+END IF;
+END $$;
