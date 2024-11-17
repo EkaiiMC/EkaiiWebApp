@@ -12,11 +12,11 @@ export default function Dropdown({ children } : { children: React.ReactNode }) {
 
   return (
     <>
-      <div className="relative inline-block text-left z-40">
+      <div className="z-40 relative -top-[4.5px]">
 
         <button
           onClick={toggleDropdown}
-          className={`inline-flex items-center justify-center w-full border-[3px] border-bgLightGray shadow-sm px-2 py-2 bg-bgGray font-light text-baseText z-50 hover:border-bgDarkGray ease-out duration-500 transition-all ${isOpen ? 'no-active' : ''}`}
+          className={`inline-flex items-center justify-center w-full border-[3px] border-bgLightGray shadow-sm p-2 h-[40px] bg-bgGray font-light text-baseText z-50 hover:border-bgDarkGray ease-out duration-500 transition-all ${isOpen ? 'no-active' : ''}`}
         >
           <div className="icon-container mr-2">
             <div className={`bar bar1 ${isOpen ? 'bar1-open' : ''}`}></div>

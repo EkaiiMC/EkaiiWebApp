@@ -5,17 +5,20 @@ import {auth} from "@/auth";
 import {getVotingDelta} from "@/utils";
 import {VoteSite} from "@prisma/client";
 
-const rateLimits = new ExpiryMap(5000)
+const rateLimits : {[key : string]: ExpiryMap} = {
+  'serveur-prive.net': new ExpiryMap(5000),
+  'serveur-minecraft-vote.fr': new ExpiryMap(5000),
+}
 
-export async function GET(req: NextRequest, props: { name: string }) {
-  const ip = req.headers.get('x-real-ip') || req.headers.get('x-forwarded-for')?.split(', ')[0] || req.ip;
+export async function GET(req: NextRequest, { params }: { params: { name: string } }) {
+  const ip = '91.168.188.216'//req.headers.get('x-real-ip') || req.headers.get('x-forwarded-for')?.split(', ')[0] || req.ip;
 
   // Rate limiting
-  if (rateLimits.has(ip)) {
+  if (rateLimits[params.name] && rateLimits[params.name].has(ip)) {
     return NextResponse.json({message: 'Rate limit exceeded'}, {status: 429});
   }
 
-  rateLimits.set(ip, true);
+  rateLimits[params.name]?.set(ip, true);
 
   const user = await auth();
 
@@ -27,7 +30,7 @@ export async function GET(req: NextRequest, props: { name: string }) {
   let voteStatus: { hasVoted: boolean, nextVote?: Date, lastVote?: Date } = { hasVoted: false, lastVote: undefined, nextVote: undefined };
   const site = await prisma.voteSite.findFirst({
     where: {
-      title: props.name
+      title: params.name
     }
   });
 
@@ -73,6 +76,24 @@ export async function GET(req: NextRequest, props: { name: string }) {
           hasVoted: true,
           nextVote: new Date(json.data!.voted_at * 1000 + json.data!.next_vote_seconds * 1000),
           lastVote: new Date(json.data!.voted_at * 1000)
+        };
+      }
+      break;
+    case 'serveur-minecraft-vote.fr':
+      const res2 = await fetch(`https://serveur-minecraft-vote.fr/api/v1/servers/${process.env.SERVEUR_MINECRAFT_VOTE_SERVER_ID}/vote/${ip}`);
+      const json2: {
+        canVote: boolean,
+        waitSecond?: number,
+        name?: string,
+        votedAt?: string // ISO 8601 format
+      } = await res2.json();
+      if (json2.canVote) { // User has not voted
+        voteStatus = {hasVoted: false, lastVote: lastVote?.createdAt};
+      } else {
+        voteStatus = {
+          hasVoted: true,
+          nextVote: new Date(Date.parse(json2.votedAt!) + json2.waitSecond! * 1000),
+          lastVote: new Date(Date.parse(json2.votedAt!))
         };
       }
       break;

@@ -9,23 +9,23 @@ interface VotingData {
   lastVote?: Date;
 }
 
-const INITIAL_FETCH_DELAY = 5000;
-const POLLING_INTERVAL = 7000;
-const MAX_POLLING_DURATION = 60000;
+const POLLING_INTERVAL = 10000;
+const MIN_API_CALL_INTERVAL = 5000; // 5 seconds
 
-export default function VotingButton({ site }: { site: VoteSite }) {
+export default function VotingButton({ site, size }: { site: VoteSite, size: number }) {
   const [votingData, setVotingData] = useState<VotingData | null>(null);
   const [hover, setHover] = useState(false);
+  const [remainingTime, setRemainingTime] = useState('');
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const lastFetchTimeRef = useRef<number>(0);
-  const clickTimeRef = useRef<number | null>(null);
+  const lastApiCallRef = useRef<number>(0);
+  const sizeTag = 'w-[' + size + 'px]';
 
   const fetchVotingData = async () => {
     const now = Date.now();
-    if (now - lastFetchTimeRef.current < INITIAL_FETCH_DELAY) {
+    if (now - lastApiCallRef.current < MIN_API_CALL_INTERVAL) {
       return;
     }
-    lastFetchTimeRef.current = now;
+    lastApiCallRef.current = now;
 
     try {
       const response = await fetch(`/api/vote/${site.title}`);
@@ -47,43 +47,32 @@ export default function VotingButton({ site }: { site: VoteSite }) {
 
   useEffect(() => {
     fetchVotingData();
-  }, [site.title, fetchVotingData]);
+  }, [site.title]);
 
   useEffect(() => {
-    if (clickTimeRef.current !== null) {
-      const interval = setInterval(async () => {
-        const now = Date.now();
-        if (now - clickTimeRef.current! >= MAX_POLLING_DURATION || votingData?.hasVoted) {
-          clearInterval(interval);
-          return;
-        }
-        await fetchVotingData();
-      }, POLLING_INTERVAL);
-
-      intervalRef.current = interval; // Added to store the interval reference
-
+    if (votingData?.hasVoted === false) {
+      const interval = setInterval(fetchVotingData, POLLING_INTERVAL);
+      intervalRef.current = interval;
       return () => clearInterval(interval);
     }
-  }, [clickTimeRef.current, votingData?.hasVoted, fetchVotingData]);
+  }, [votingData?.hasVoted]);
 
-  const handleClick = async () => {
-    if (clickTimeRef.current === null) { // Added to debounce clicks
-      clickTimeRef.current = Date.now();
-      await fetchVotingData();
-    }
-  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (votingData?.nextVote) {
+        const now = new Date();
+        const remainingTime = votingData.nextVote.getTime() - now.getTime();
+        const hours = Math.floor(remainingTime / 3600000);
+        const minutes = String(Math.floor((remainingTime % 3600000) / 60000)).padStart(2, '0');
+        const seconds = String(Math.floor((remainingTime % 60000) / 1000)).padStart(2, '0');
+        setRemainingTime(hours > 0 ? `- ${hours}h${minutes}m${seconds}s` : `- ${minutes}m${seconds}s`);
+      } else {
+        setRemainingTime('');
+      }
+    }, 1000);
 
-  const getRemainingTime = () => {
-    if (votingData?.nextVote) {
-      const now = new Date();
-      const remainingTime = votingData.nextVote.getTime() - now.getTime();
-      const hours = Math.floor(remainingTime / 3600000);
-      const minutes = String(Math.floor((remainingTime % 3600000) / 60000)).padStart(2, '0');
-      const seconds = String(Math.floor((remainingTime % 60000) / 1000)).padStart(2, '0');
-      return hours > 0 ? `- ${hours}h${minutes}m${seconds}s` : `- ${minutes}m${seconds}s`;
-    }
-    return '';
-  };
+    return () => clearInterval(interval);
+  }, [votingData?.nextVote]);
 
   return (
     <div className="flex justify-center items-center">
@@ -93,14 +82,13 @@ export default function VotingButton({ site }: { site: VoteSite }) {
         rel="noopener noreferrer"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        onClick={handleClick}
-        className={`px-2 py-2 text-white transition duration-300 text-lg w-48 text-center border-[3px] ${
+        className={`px-2 py-2 text-white transition duration-300 text-lg text-center border-[3px] ${
           votingData?.hasVoted
             ? 'bg-bgDarkGray border-bgLightGray hover:border-topBorder'
             : 'bg-pinkText border-basePink hover:border-darkPink'
-        }`}
+        } ${sizeTag}`}
       >
-        {hover && votingData?.hasVoted ? getRemainingTime() : site.title}
+        {hover && votingData?.hasVoted ? remainingTime : site.title}
       </a>
     </div>
   );

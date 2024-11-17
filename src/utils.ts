@@ -14,6 +14,7 @@ export function hasDashboardAccess(role: string) {
 export function getVotingDelta(site: string): Date {
   switch (site) {
     case 'serveur-prive.net':
+    case 'serveur-minecraft-vote.fr':
       return new Date(90 * 60 * 1000);
     default:
       throw new Error('Unknown voting site');

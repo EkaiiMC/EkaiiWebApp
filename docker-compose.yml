@@ -1,5 +1,6 @@
 services:
   db:
+    container_name: ekaii-db
     build:
       context: ./
       dockerfile: ./docker/db/Dockerfile
@@ -10,6 +11,7 @@ services:
     ports:
       - "5432:5432"
   app:
+    container_name: ekaii-app
     build:
       context: ./
       target: prod
@@ -22,4 +24,4 @@ services:
       - "3000:3000"
     depends_on: [ db ]
     environment:
-      - DATABASE_URL=postgres://ekaii:ekaii@db:5432/ekaii
+      - DATABASE_URL=postgres://ekaii:ekaii@ekaii-db:5432/ekaii

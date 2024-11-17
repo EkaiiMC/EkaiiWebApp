@@ -54,7 +54,7 @@ export async function LoginButton() {
         <div
           className={'border-[0.13rem] border-[#178903] bg-[#67DB29] mr-2 ml-0 w-3 h-3 min-w-3 min-h-3 mt-auto mb-auto'}/>
         <p className={'mt-auto mb-auto'}>Connecté : <span className={'font-medium'}>{session.user.name}</span></p>
-        <ul className={'dropdown-menu bg-bgGray border-bgDarkGray border-[3px] w-2/3 -right-[3px] text-left pl-2 leading-7 pt-1 pb-1'}>
+        <ul className={'dropdown-menu bg-bgGray border-bgDarkGray border-[3px] w-2/3 min-w-36 -right-[3px] text-left pl-2 leading-7 pt-1 pb-1'}>
           {hasDashboardAccess(session.user.role) && <li className={'hover:text-hoverText'}><Link href={'/dashboard'}>Dashboard</Link></li>}
           <li className={'hover:text-hoverText'}><Link href={'/profile'}>Voir le profil</Link></li>
           <li className={'hover:text-hoverText'}><form action={
@@ -70,7 +70,7 @@ export async function LoginButton() {
 
   return (
     <div
-      className={'p-[5px_12px] ml-1 bg-bgGray text-baseText border-[3px] border-bgLightGray hover:border-solid hover:border-bgDarkGray text-nowrap text-center cursor-default flex dropdown ease-out duration-500 transition-all h-full navbar:h-auto'}>
+      className={'p-[5px_12px] ml-1 bg-bgGray text-baseText border-[3px] border-bgLightGray hover:border-solid hover:border-bgDarkGray text-nowrap text-center cursor-default flex dropdown ease-out duration-500 transition-all h-[40px]'}>
       {elmt}
     </div>
   )

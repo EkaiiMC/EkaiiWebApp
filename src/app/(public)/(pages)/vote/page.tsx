@@ -22,7 +22,7 @@ export default async function Vote() {
         </p>
         <div className={"flex flex-wrap justify-evenly mt-7"}>
           {(session && session.user) ? voteSites.map((site) => (
-            <VotingButton key={site.id} site={site}/>
+            <VotingButton key={site.id} site={site} size={300}/>
           )) : <p className={'text-redText'}>Veuillez vous connecter pour voter</p>}
         </div>
       </div>
@@ -39,7 +39,7 @@ export default async function Vote() {
             </tr>
             </thead>
             <tbody>
-            {leaderboard.map((entry, index) => (
+            {leaderboard.length > 0 && leaderboard.map((entry, index) => (
               <React.Fragment key={entry.username}>
                 <tr className={index === 0 ? 'sticky top-[30px] z-20 bg-basePink h-[48px]' : 'bg-bgLightGray'}>
                   <td
@@ -70,6 +70,11 @@ export default async function Vote() {
                 )}
               </React.Fragment>
             ))}
+            {leaderboard.length === 0 && (
+              <tr className={'h-28'}>
+                <td colSpan={4} className={'text-center italic'}>Aucun vote n&apos;a été enregistré pour le moment</td>
+              </tr>
+            )}
             </tbody>
           </table>
         </div>
