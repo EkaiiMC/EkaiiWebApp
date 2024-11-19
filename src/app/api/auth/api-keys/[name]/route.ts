@@ -3,7 +3,7 @@ import {
   ApiScope,
   checkAccess,
   deleteApiKey,
-  editPermissions,
+  editPermissions, getCreatedAt,
   getPermissions,
   isMaintainer,
 } from "@/api-auth";
@@ -32,7 +32,8 @@ export async function GET(req: NextRequest, props: {params: Promise<{name: strin
   }
 
   const perms = await getPermissions(params.name);
-  return NextResponse.json({name: params.name, scopes: perms});
+  const createdAt = await getCreatedAt(params.name);
+  return NextResponse.json({name: params.name, scopes: perms, createdAt: createdAt}, {status: 200});
 }
 
 export async function PATCH(req: NextRequest, props: {params: Promise<{name: string}>}) {
@@ -65,12 +66,11 @@ export async function PATCH(req: NextRequest, props: {params: Promise<{name: str
     return NextResponse.json({message: 'Invalid body'}, {status: 400});
   }
   try {
-    await editPermissions(params.name, scope);
+    const key = await editPermissions(params.name, scope);
+    return NextResponse.json(key, {status: 200});
   } catch (e) {
     return NextResponse.json({message: 'Key not found'}, {status: 404});
   }
-
-  return NextResponse.json({message: 'Permissions updated'}, {status: 200});
 }
 
 export async function DELETE(req: NextRequest, props: {params: Promise<{name: string}>}) {

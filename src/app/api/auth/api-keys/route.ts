@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
   // Create key
   const generated = await generateApiKey(keyName, keyScopes)
 
-  return NextResponse.json({key: generated.key, scopes: generated.scopes}, {status: 201});
+  return NextResponse.json(generated, {status: 201});
 }
 
 export async function GET(req: NextRequest) {

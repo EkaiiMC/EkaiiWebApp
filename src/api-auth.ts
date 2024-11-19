@@ -5,31 +5,32 @@ export interface ApiScope {
   [key: string]: ApiScope | boolean;
 }
 
-export async function generateApiKey(name: string, scopes: ApiScope) : Promise<{ key: string, scopes: ApiScope }> {
+export async function generateApiKey(name: string, scopes: ApiScope) : Promise<{ key: string, scopes: ApiScope, name: string, createdAt: Date }> {
   const saltRounds = 10;
   const token = crypto.randomUUID();
   const hashedToken = await bcrypt.hash(token, saltRounds);
-  await prisma.apiKey.create({
+  const key = await prisma.apiKey.create({
     data: {
       key: hashedToken,
       name,
       scopes
     }
   })
-  return {key: token, scopes}
+  return {key: token, scopes, name, createdAt: key.createdAt}
 }
 
 export async function editPermissions(name: string, newScopes : ApiScope) {
   const record = await prisma.apiKey.findFirst({where: {name: name}})
   if (!record) throw new Error("Api Key not found")
-  await prisma.apiKey.update({
+  const apiKey = await prisma.apiKey.update({
     where: {
       name
     },
     data: {
       scopes: newScopes
     }
-  })
+  });
+  return {name: apiKey.name, scopes: apiKey.scopes, createdAt: apiKey.createdAt}
 }
 
 export async function deleteApiKey(name: string) {
@@ -44,6 +45,12 @@ export async function getPermissions(name: string) : Promise<ApiScope> {
   const key = await prisma.apiKey.findFirst({where: {name}});
   if (!key) throw new Error("Api Key not found")
   return key.scopes as ApiScope;
+}
+
+export async function getCreatedAt(name: string) : Promise<Date> {
+  const key = await prisma.apiKey.findFirst({where: {name}});
+  if (!key) throw new Error("Api Key not found")
+  return key.createdAt;
 }
 
 export async function getKeys() : Promise<string[]> {

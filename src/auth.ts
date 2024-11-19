@@ -2,7 +2,7 @@ import NextAuth from 'next-auth'
 import {PrismaAdapter} from "@auth/prisma-adapter";
 import MicrosoftEntraID from "@auth/core/providers/microsoft-entra-id";
 import prisma from "@/db";
-import {addDashes} from "@/utils";
+import {addDashes} from "@/mc-utils";
 import {logger} from "@/logger";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({

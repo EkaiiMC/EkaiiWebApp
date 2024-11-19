@@ -1,7 +1,7 @@
 import {NextRequest, NextResponse} from "next/server";
-import {checkAccess, isWhitelisterOrMore} from "@/api-auth";
-import {addDashes} from "@/utils";
+import {checkAccess, isMaintainer, isWhitelisterOrMore} from "@/api-auth";
 import {auth} from "@/auth";
+import {getPlayerUUIDFromUsername} from "@/mc-utils";
 
 export async function GET(req: NextRequest, props: {params: Promise<{username: string}>}) {
   const params = await props.params;
@@ -30,23 +30,13 @@ export async function GET(req: NextRequest, props: {params: Promise<{username: s
   if(!serverApiUrl) throw new Error("API URL not set");
   if(!serverApiKey) throw new Error("API Key not set");
 
-  const playerUuid = await fetch( `https://api.mojang.com/users/profiles/minecraft/${params.username}`, {
-    method: 'GET',
-    cache: 'default',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    }
-  });
-
-  if (playerUuid.status === 204 || playerUuid.status === 404) {
+  const playerUuid = await getPlayerUUIDFromUsername(params.username);
+  if (!playerUuid) {
     return NextResponse.json({message: 'Player not found'}, {status: 404});
   }
 
-  const playerUuidJson = addDashes((await playerUuid.json()).id);
-
   try {
-    const res = await fetch(serverApiUrl + '/whitelist/' + playerUuidJson,
+    const res = await fetch(serverApiUrl + '/whitelist/' + playerUuid,
       {
         method: 'GET',
         cache: 'no-cache',
@@ -90,23 +80,13 @@ export async function POST(req: NextRequest, props: {params: Promise<{username: 
   if(!serverApiUrl) throw new Error("API URL not set");
   if(!serverApiKey) throw new Error("API Key not set");
 
-  const playerUuid = await fetch( `https://api.mojang.com/users/profiles/minecraft/${params.username}`, {
-    method: 'GET',
-    cache: 'default',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    }
-  });
-
-  if (playerUuid.status === 204 || playerUuid.status === 404) {
+  const playerUuid = await getPlayerUUIDFromUsername(params.username);
+  if (!playerUuid) {
     return NextResponse.json({message: 'Player not found'}, {status: 404});
   }
 
-  const playerUuidJson = addDashes((await playerUuid.json()).id);
-
   try {
-    const res = await fetch(serverApiUrl + '/whitelist/' + playerUuidJson,
+    const res = await fetch(serverApiUrl + '/whitelist/' + playerUuid,
       {
         method: 'POST',
         cache: 'no-cache',
@@ -131,7 +111,7 @@ export async function DELETE(req: NextRequest, props: {params: Promise<{username
     if (!session || !session.user) {
       return NextResponse.json({message: 'Unauthorized'}, {status: 401});
     }
-    if(!isWhitelisterOrMore((session.user as {role: string}).role)) {
+    if(!isMaintainer((session.user as {role: string}).role)) {
       return NextResponse.json({message: 'Forbidden'}, {status: 403});
     }
   } else {
@@ -150,23 +130,13 @@ export async function DELETE(req: NextRequest, props: {params: Promise<{username
   if(!serverApiUrl) throw new Error("API URL not set");
   if(!serverApiKey) throw new Error("API Key not set");
 
-  const playerUuid = await fetch( `https://api.mojang.com/users/profiles/minecraft/${params.username}`, {
-    method: 'GET',
-    cache: 'no-cache',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    }
-  });
-
-  if (playerUuid.status === 204 || playerUuid.status === 404) {
+  const playerUuid = await getPlayerUUIDFromUsername(params.username);
+  if (!playerUuid) {
     return NextResponse.json({message: 'Player not found'}, {status: 404});
   }
 
-  const playerUuidJson = addDashes((await playerUuid.json()).id);
-
   try {
-    const res = await fetch(serverApiUrl + '/whitelist/' + playerUuidJson,
+    const res = await fetch(serverApiUrl + '/whitelist/' + playerUuid,
       {
         method: 'DELETE',
         cache: 'no-cache',

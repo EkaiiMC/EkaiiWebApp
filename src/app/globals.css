@@ -127,3 +127,7 @@ main {
 .bar3-open {
   transform: rotate(-45deg) translate(6px, -6px);
 }
+
+.custom-option {
+  @apply bg-white text-black hover:bg-gray-200;
+}

@@ -27,7 +27,7 @@ export default async function Gallery() {
     <>
       <h1
         className={"font-monocraft text-4xl text-left shadow-underline w-4/5 md:w-1/2 p-3 pb-5 ml-auto mr-auto relative -top-10"}>Galerie</h1>
-      <div className={'flex flex-wrap ml-auto mr-auto justify-center content-start min-h-[75vh]'}>
+      <div className={'flex flex-wrap ml-auto mr-auto justify-center content-start'}>
         {res}
       </div>
     </>
