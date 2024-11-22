@@ -14,7 +14,7 @@ WHERE
   AND EXTRACT(YEAR FROM v."createdAt") = EXTRACT(YEAR FROM CURRENT_DATE)
 GROUP BY
   u.name,
-  u.id;
+  u.id
 ORDER BY
   "voteCount" DESC;
 
