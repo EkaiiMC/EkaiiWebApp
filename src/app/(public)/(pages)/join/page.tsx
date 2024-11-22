@@ -1,4 +1,9 @@
 import PinkHoverDisplay from "@/components/pink-hover-display";
+import {Metadata} from "next";
+
+export const metadata : Metadata = {
+  title: 'Rejoindre'
+}
 
 export default function About() {
   return (

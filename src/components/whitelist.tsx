@@ -207,7 +207,7 @@ export default function Whitelist({ isMaintainer }: { isMaintainer: boolean }) {
   return (
     <div className={'bg-bgLighterGray overflow-y-scroll overflow-auto flex-grow p-3 text-lg h-full max-h-[85vh]'}>
       <div className="flex mb-4 justify-between flex-wrap">
-        <div className={'flex flex-row w-1/4 flex-grow'}>
+        <div className={'flex flex-row w-1/4 flex-grow mb-2'}>
           <input
             type="text"
             placeholder="Rechercher..."
@@ -215,9 +215,9 @@ export default function Whitelist({ isMaintainer }: { isMaintainer: boolean }) {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="p-2 border border-gray-300 text-black mr-2"
           />
-          <p className={'my-auto'}>{filteredWhitelist.length} joueurs</p>
+          <p className={'my-auto text-sm min-[1375px]:text-lg'}>{filteredWhitelist.length} joueurs</p>
         </div>
-        <div className="flex flex-row">
+        <div className="flex flex-row mb-2">
           <select value={sortOption} onChange={(e) => setSortOption(e.target.value)} className="p-2 border border-gray-300 text-black mr-2">
             <option value="name_asc">Nom &#8593;</option>
             <option value="name_desc">Nom &#8595;</option>

@@ -11,7 +11,7 @@ const rateLimits : {[key : string]: ExpiryMap} = {
 }
 
 export async function GET(req: NextRequest, { params }: { params: { name: string } }) {
-  const ip = '91.168.188.216'//req.headers.get('x-real-ip') || req.headers.get('x-forwarded-for')?.split(', ')[0] || req.ip;
+  const ip = req.headers.get('x-real-ip') || req.headers.get('x-forwarded-for')?.split(', ')[0] || req.ip;
 
   // Rate limiting
   if (rateLimits[params.name] && rateLimits[params.name].has(ip)) {

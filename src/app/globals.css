@@ -131,3 +131,8 @@ main {
 .custom-option {
   @apply bg-white text-black hover:bg-gray-200;
 }
+
+.sharp-blur {
+  backdrop-filter: blur(10px);
+  border: 1px solid transparent;
+}

@@ -1,5 +1,10 @@
 import {Pack, PackSkeleton} from "@/components/modpack";
 import {Suspense} from "react";
+import {Metadata} from "next";
+
+export const metadata : Metadata = {
+  title: 'Modpack'
+}
 
 export default function Modpack() {
   return (

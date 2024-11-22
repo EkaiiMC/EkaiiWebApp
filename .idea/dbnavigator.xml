@@ -33,6 +33,7 @@
     <retain-sticky-names value="false" />
   </component>
   <component name="DBNavigator.Project.FileConnectionMappingManager">
+    <mapping file-url="file://$PROJECT_DIR$/prisma/migrations/20241121142813_monthly_leaderboard/migration.sql" connection-id="8e7dd4ab-3624-4f13-b1db-efdfdf82d952" session-id="MAIN" current-schema="public" />
     <mapping file-url="file://$PROJECT_DIR$/prisma/migrations/20241119170524_gallery_rank/migration.sql" connection-id="8e7dd4ab-3624-4f13-b1db-efdfdf82d952" session-id="MAIN" current-schema="public" />
   </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">

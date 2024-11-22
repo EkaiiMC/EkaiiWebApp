@@ -8,6 +8,7 @@ FROM base as builder
 WORKDIR /app
 COPY . .
 RUN npm run build
+RUN npx prisma generate
 
 FROM base as prod
 WORKDIR /app

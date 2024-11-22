@@ -6,6 +6,7 @@ datasource db {
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["views", "postgresqlExtensions"]
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 model User {
@@ -173,6 +174,13 @@ model AltAccount {
 }
 
 view Leaderboard {
+  userId    String @id
+  username  String @unique
+  voteCount Int
+  rank      Int
+}
+
+view MonthlyLeaderboard {
   userId    String @id
   username  String @unique
   voteCount Int

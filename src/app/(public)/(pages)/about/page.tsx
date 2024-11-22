@@ -1,6 +1,11 @@
 import {getDiscordMembersCount} from "@/utils";
 import Counter from "@/components/counter";
 import PinkHoverDisplay from "@/components/pink-hover-display";
+import {Metadata} from "next";
+
+export const metadata : Metadata = {
+  title: 'À propos'
+}
 
 export default async function About() {
   const memberCount = await getDiscordMembersCount();
@@ -12,7 +17,7 @@ export default async function About() {
         className="font-monocraft text-4xl text-left shadow-underline w-4/5 md:w-1/2 p-3 pb-5 ml-auto mr-auto relative -top-10">
         À propos
       </h1>
-      <PinkHoverDisplay className={'lg:w-1/2 mx-auto max-lg:mx-4'} title={"Une véritable expérience vanilla"} text={"Ekaii a pour projet de reproduire au mieux ce qu'un joueur en solo pourrait vivre au cours de son aventure Minecraft. C'est à dire le jeu tel qu'il a été développé, avec ses mécaniques et ses bugs, le tout en assurant des performances de jeu optimales, et en compagnie d'une communauté chaleureuse et accueillante. Ekaii est éternel : aucune crainte de perdre sa progression à chaque nouvelle version, c'est les versions qui s'adaptent au serveur."}/>
+      <PinkHoverDisplay className={'lg:w-1/2 mx-auto max-lg:mx-4'} title={"Une véritable expérience vanilla"} text={"Ekaii a pour projet de reproduire au mieux ce qu'un joueur en solo pourrait vivre au cours de son aventure Minecraft. C'est à dire le jeu tel qu'il a été développé, avec ses mécaniques et ses bugs, le tout en assurant des performances de jeu optimales, et en compagnie d'une communauté chaleureuse et accueillante. Ekaii est éternel : aucune crainte de perdre sa progression à chaque nouvelle version, ce sont les versions qui s'adaptent au serveur."}/>
       <div
         className={'flex flex-col min-[780px]:flex-row content-center flex-wrap min-[780px]:flex-nowrap justify-between mx-auto w-4/5 min-[1800px]:w-[60vw] min-[1900px]-w-[55vw] min-[2200px]:w-1/2'}>
         <Counter lowerBound={0} upperBound={memberCount} content={"Joueurs"}/>

@@ -1,8 +1,12 @@
 import {auth} from "@/auth";
 import {redirect} from "next/navigation";
 import Image from "next/image";
-import {Session} from "@auth/core/types";
 import prisma from "@/db";
+import {Metadata} from "next";
+
+export const metadata : Metadata = {
+  title: 'Profil'
+}
 
 export default async function Profile() {
   const session = await auth();
@@ -52,7 +56,7 @@ export default async function Profile() {
         return "/images/roles/member.svg";
     }
   })();
-  const votes = await prisma.leaderboard.findFirst({
+  const votes = await prisma.monthlyLeaderboard.findFirst({
     where: {
       userId: user.id
     }
@@ -71,15 +75,15 @@ export default async function Profile() {
             <h3 className={'text-xl'}>Inscrit depuis le : <span className={'font-medium'}>{date}</span></h3>
             <h3 className={'text-xl'}>Grade : <span className={'font-medium'}>{role}</span></h3>
 
-            <h3 className={'text-xl mt-6'}>Classement des votes : <span className={'font-medium'}>{rank}</span></h3>
-            <h3 className={'text-xl'}>Nombre de votes : <span className={'font-medium'}>{voteCount} votes</span></h3>
+            <h3 className={'text-xl mt-6'}>Classement des votes (mois) : <span className={'font-medium'}>{rank}</span></h3>
+            <h3 className={'text-xl'}>Nombre de votes (mois) : <span className={'font-medium'}>{voteCount} votes</span></h3>
           </div>
           <Image src={roleImage} alt={role} width={128} height={128} className={"hidden navbar:block"}/>
         </div>
       </div>
       <div className={"w-2/3 shadow-underline m-auto"}>
         <h2 className={'text-2xl sm:text-4xl font-monocraft mt-10'}>Cosmétiques</h2>
-        <p className={'text-lg mt-3'}>Coming soon...</p>
+        <p className={'text-xl mt-3 italic'}>Coming soon...</p>
       </div>
     </div>
 

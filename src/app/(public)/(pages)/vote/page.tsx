@@ -3,18 +3,23 @@ import prisma from "@/db";
 import VotingButton from "@/components/votelink";
 import Image from "next/image";
 import React from "react";
+import {Metadata} from "next";
+
+export const metadata : Metadata = {
+  title: 'Voter'
+}
 
 export default async function Vote() {
   const session = await auth();
   const voteSites = await prisma.voteSite.findMany();
 
-  const leaderboard = await prisma.leaderboard.findMany();
+  const leaderboard = await prisma.monthlyLeaderboard.findMany();
 
   return (
     <>
       <h1
         className="font-monocraft text-4xl text-left shadow-underline w-4/5 md:w-1/2 p-3 pb-5 ml-auto mr-auto relative -top-10">Voter</h1>
-      <div className={"relative -top-8 w-full md:w-1/2 p-3 pb-5 shadow-underline mx-auto text-justify text-lg"}>
+      <div className={"relative -top-8 w-[95%] sm:w-3/4 md:w-2/3 2xl:w-1/2 p-3 pb-5 shadow-underline mx-auto text-justify text-lg"}>
         <p className={"leading-5 mt-3"}>
           Voter permet de faire connaître le serveur et de le faire monter dans les classements, permettant ainsi
           d&apos;agrandir notre communauté. Et comme on dit, plus on est de fous, plus on rit !<br/> Cela permet
@@ -27,7 +32,16 @@ export default async function Vote() {
         </div>
       </div>
       <div className={'w-full md:w-1/2 p-3 pb-5 mx-auto text-justify text-lg'}>
-        <h2 className={"font-monocraft text-2xl text-left"}>Classement des votes</h2>
+        <h2 className={"font-monocraft text-2xl text-left"}>Classement des votes {(() => {
+          const monthString = new Date().toLocaleString('fr-FR', {month: 'long'});
+          const capitalizedMonth = monthString.charAt(0).toUpperCase() + monthString.slice(1);
+          // if month start with a vowel, append d' instead of de
+          if (['a', 'e', 'i', 'o', 'u'].includes(capitalizedMonth.charAt(0).toLowerCase())) {
+            return `d'${capitalizedMonth}`;
+          } else {
+            return `de ${capitalizedMonth}`;
+          }
+        })()}</h2>
         <div className="w-full overflow-y-auto max-h-[21.8rem] scrollbar-hide border-b-bgDarkGray border-b-[3px] mt-10">
           <table className="w-full text-left border-separate border-spacing-0">
             <thead className="sticky top-0 z-10 bg-bgGray">

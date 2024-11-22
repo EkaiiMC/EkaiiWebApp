@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import { VoteSite } from "@prisma/client";
 
 interface VotingData {
@@ -20,7 +20,7 @@ export default function VotingButton({ site, size }: { site: VoteSite, size: num
   const lastApiCallRef = useRef<number>(0);
   const sizeTag = 'w-[' + size + 'px]';
 
-  const fetchVotingData = async () => {
+  const fetchVotingData = useCallback(async () => {
     const now = Date.now();
     if (now - lastApiCallRef.current < MIN_API_CALL_INTERVAL) {
       return;
@@ -43,11 +43,11 @@ export default function VotingButton({ site, size }: { site: VoteSite, size: num
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [site.title]);
 
   useEffect(() => {
     fetchVotingData();
-  }, [site.title]);
+  }, [site.title, fetchVotingData]);
 
   useEffect(() => {
     if (votingData?.hasVoted === false) {
@@ -55,7 +55,7 @@ export default function VotingButton({ site, size }: { site: VoteSite, size: num
       intervalRef.current = interval;
       return () => clearInterval(interval);
     }
-  }, [votingData?.hasVoted]);
+  }, [votingData?.hasVoted, fetchVotingData]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -72,7 +72,7 @@ export default function VotingButton({ site, size }: { site: VoteSite, size: num
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [votingData?.nextVote]);
+  }, [votingData?.nextVote, fetchVotingData]);
 
   return (
     <div className="flex justify-center items-center">
@@ -86,7 +86,7 @@ export default function VotingButton({ site, size }: { site: VoteSite, size: num
           votingData?.hasVoted
             ? 'bg-bgDarkGray border-bgLightGray hover:border-topBorder'
             : 'bg-pinkText border-basePink hover:border-darkPink'
-        } ${sizeTag}`}
+        } ${sizeTag} my-2 mx-1`}
       >
         {hover && votingData?.hasVoted ? remainingTime : site.title}
       </a>

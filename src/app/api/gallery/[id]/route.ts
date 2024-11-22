@@ -4,6 +4,7 @@ import {checkAccess, isDesignerOrMore} from "@/api-auth";
 import prisma from "@/db";
 import {logger} from "@/logger";
 import {writeFile} from "fs/promises";
+import {unlink} from "node:fs";
 
 export async function DELETE(req: NextRequest, props: { params: { id: string } }) : Promise<NextResponse> {
   const key = req.headers.get('Authorization')?.split(' ')[1];
@@ -31,6 +32,12 @@ export async function DELETE(req: NextRequest, props: { params: { id: string } }
   if (!item) return NextResponse.json({error: 'Item not found'}, {status: 404});
 
   try {
+    const filePath = 'public'+item.imagePath;
+    unlink(filePath, (err) => {
+      if (err) {
+        logger.error(err);
+      }
+    });
     await prisma.galleryItem.delete({where: {id}});
     return NextResponse.json({success: 'Item deleted'});
   } catch (e) {
@@ -70,17 +77,24 @@ export async function PATCH(req: NextRequest, props: { params: { id: string } })
   const title = formData.get('title') as string | null;
   const author = formData.get('author') as string | null;
   const description = formData.get('description') as string | null;
+  const rank = formData.get('rank') as string | null;
 
-  const updateData: {title?: string, author?: string, description?: string, imagePath?: string} = {};
+  const updateData: {title?: string, author?: string, description?: string, imagePath?: string, rank?: number} = {};
   if (title) updateData.title = title;
   if (author) updateData.author = author;
   if (description) updateData.description = description;
+  if (rank) updateData.rank = parseInt(rank);
 
   if (file) {
     const buffer = Buffer.from(await file.arrayBuffer());
     const fileName = file.name.replaceAll(' ', '_');
     const filePath = `/uploads/${fileName}`;
     try {
+      unlink('public'+item.imagePath, (err) => {
+        if (err) {
+          logger.error(err);
+        }
+      });
       await writeFile('public'+filePath, buffer);
       updateData.imagePath = filePath;
     } catch (e) {

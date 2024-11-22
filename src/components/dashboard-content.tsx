@@ -59,7 +59,7 @@ const DashboardContent = () => {
           <p className="text-lg">{onlinePlayers}</p>
         </div>
       </div>
-      {lastRefresh && <p className="italic text-sm text-gray-500">Last refreshed: {lastRefresh}</p>}
+      {lastRefresh && <p className="italic text-sm text-gray-500">Dernière mise à jour: {lastRefresh}</p>}
     </div>
   );
 };

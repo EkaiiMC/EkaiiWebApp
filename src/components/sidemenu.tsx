@@ -22,6 +22,7 @@ export default async function SideMenu() {
         <h1 className={'font-monocraft text-3xl'}>Dashboard</h1>
       </Link>
       <div className="flex flex-col items-center justify-start h-full">
+        {isDesignerOrMore(user.role) && <DashboardButton href="/dashboard/gallery" imageUrl={'../images/photo.svg'} imageAlt={'Galerie'}>Galerie</DashboardButton>}
         {isWhitelisterOrMore(user.role) && <DashboardButton href="/dashboard/players" imageUrl={'../images/player.svg'}
                           imageAlt={'Serveur'}>Joueurs</DashboardButton>}
         {isDesignerOrMore(user.role) && <DashboardButton href="/dashboard/projects" imageUrl={'../images/roles/designer.svg'}

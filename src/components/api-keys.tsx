@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface APIScope {
   [key: string]: APIScope | boolean | { selected: boolean };
@@ -23,6 +23,7 @@ export default function APIKeys() {
   const [newlyCreatedKey, setNewlyCreatedKey] = useState<string | null>(null);
   const [selectedScope, setSelectedScope] = useState<string[]>([]);
   const [expandedScopes, setExpandedScopes] = useState<string[][]>([]);
+  const inputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
   useEffect(() => {
     const fetchKeys = async () => {
@@ -149,8 +150,10 @@ export default function APIKeys() {
           const isSelected = JSON.stringify(selectedScope) === JSON.stringify(currentPath);
           const isExpanded = expandedScopes.some(expandedPath => JSON.stringify(expandedPath) === JSON.stringify(currentPath));
           const inputClass = `block text-sm font-medium text-baseText ${isSelected ? 'bg-pinkText' : 'bg-bgLighterGray'} p-1`;
+          const inputKey = currentPath.join('.');
+
           return (
-            <div key={currentPath.join('.')} className={`ml-4`}>
+            <div key={inputKey} className={`ml-4`}>
               <div className="flex items-center">
                 <button onClick={() => toggleExpandScope(currentPath)} className="mr-2 w-2">
                   {isExpanded ? '-' : '+'}
@@ -158,6 +161,7 @@ export default function APIKeys() {
                 <input
                   type="text"
                   value={key}
+                  ref={(el) => { inputRefs.current[inputKey] = el; }}
                   onClick={() => toggleSelectScope(currentPath)}
                   onChange={(e) => {
                     const newScopes = { ...currentKey!.scopes };

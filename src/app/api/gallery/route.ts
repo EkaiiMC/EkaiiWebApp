@@ -61,6 +61,12 @@ export async function POST(req: NextRequest) : Promise<NextResponse> {
   const author = formData.get('author') as string | null;
   if (!author) return NextResponse.json({error: 'No author provided'}, {status: 400});
 
+  let rank = formData.get('rank') as string | null;
+  if (!rank) {
+    const count = await prisma.galleryItem.count();
+    rank = (count + 1).toString();
+  }
+
   const description = formData.get('description') as string | null;
 
   const buffer = Buffer.from(await file.arrayBuffer());
@@ -74,6 +80,7 @@ export async function POST(req: NextRequest) : Promise<NextResponse> {
         title,
         description,
         imagePath: filePath,
+        rank: parseInt(rank)
       }
     });
     return NextResponse.json({success: 'File uploaded'});
