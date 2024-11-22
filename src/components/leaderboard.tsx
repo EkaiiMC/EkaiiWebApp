@@ -1,3 +1,5 @@
+import prisma from "@/db";
+
 interface LeaderboardEntry {
   userId: string;
   username: string;
@@ -7,24 +9,7 @@ interface LeaderboardEntry {
 
 export default async function Leaderboard({ type }: { type: "monthly" | "global" }) {
 
-  let leaderboard: LeaderboardEntry[] = [];
-  for (let i = 1; i <= 200; i++) {
-    if (type === "monthly") {
-      leaderboard.push({
-        userId: `monthly-${i}`,
-        username: `MonthlyUser${i}`,
-        voteCount: Math.floor(Math.random() * 1000),
-        rank: i
-      });
-    } else {
-      leaderboard.push({
-        userId: `global-${i}`,
-        username: `GlobalUser${i}`,
-        voteCount: Math.floor(Math.random() * 1000),
-        rank: i
-      });
-    }
-  }
+  const leaderboard = type === "monthly" ? await prisma.monthlyLeaderboard.findMany() : await prisma.leaderboard.findMany()
 
   return (
     <div className={'text-lg bg-bgLighterGray p-2 flex-grow'}>

@@ -6,18 +6,20 @@ import {logger} from "@/logger";
 import Footer from "@/components/footer";
 import {getServerStatus} from "@/utils";
 
-function StickyBackground({ text, type }: {text: string, type: "home" | "other" }) {
+function StickyBackground({ text, type }: { text: string, type: "home" | "other" }) {
   const currHour = new Date().getHours();
-  const bgClass = type === "home" ? (currHour < 17 && currHour > 6 ? "bg-homeBackgroundDay" : "bg-homeBackgroundNight") : "bg-defaultBackground";
+  const bgClass = type === "home" ? (currHour < 18 && currHour > 6 ? "bg-homeBackgroundDay" : "bg-homeBackgroundNight") : "bg-defaultBackground";
   const height = type === "home" ? "h-[100vh]" : "h-[25vh]";
   return (
     <div>
-      <div className={`sticky z-0 top-0 w-full ${height} inline-block ${bgClass} bg-cover bg-fixed bg-center bg-no-repeat`}/>
+      <div className={`sticky z-0 top-0 w-full ${height} inline-block ${bgClass} bg-cover bg-fixed bg-center bg-no-repeat`} />
       {type === 'home' && <div className={"absolute top-0 left-0 w-full h-full bg-black bg-opacity-30"} />}
       <h1
-        className={"fixed font-monocraft text-center w-full top-1/2 left-1/2 translate-x-[-50%] translate-y-[-100%] text-2xl max-lg:px-3 lg:text-4xl 2xl:text-5xl [text-shadow:4px_4px_4px_rgba(0,0,0,0.5)]"}>{text}</h1>
+        className={"fixed font-monocraft text-center w-full top-1/2 left-1/2 translate-x-[-50%] translate-y-[-100%] text-2xl max-lg:px-3 lg:text-4xl 2xl:text-5xl [text-shadow:4px_4px_4px_rgba(0,0,0,0.5)]"}>
+        {text}
+      </h1>
     </div>
-  )
+  );
 }
 
 function ServerStatusSkeleton(props : {statusColor?: string, statusText?: string, players?: number}) {

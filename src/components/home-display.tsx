@@ -12,7 +12,7 @@ export default function HomeDisplay({icon, name, content, link} : {icon: string,
           className={"object-contain"}
         />
       </div>
-      <h3 className={"text-xl text-center font-bold uppercase"}>{name}</h3>
+      <h2 className={"text-xl text-center font-bold uppercase"}>{name}</h2>
       <p className={"leading-5 mt-3 text-left"}>{content}</p>
       <div className={"mt-3 text-right"}>
         <Link href={link.href} className={"text-right text-grayText"}>{link.text} {' >'}</Link>
