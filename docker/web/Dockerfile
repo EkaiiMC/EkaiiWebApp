@@ -7,6 +7,7 @@ EXPOSE 3000
 FROM base AS builder
 WORKDIR /app
 COPY . .
+RUN npm config set strict-ssl false # This is to remove the bug of long install times, remove when fixed
 RUN npm install
 RUN npm run build
 RUN npx prisma generate
