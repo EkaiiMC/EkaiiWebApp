@@ -16,8 +16,8 @@ jobs:
       - name: Login to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build Docker Image
-        run: docker build -t ghcr.io/ekaiimc/ekaii-web-app:${{ env.VERSION }} --target prod -f ./docker/web/Dockerfile .
+        run: docker build -t ghcr.io/ekaiimc/ekaii-web-app:${{ env.VERSION }} -t ghcr.io/ekaiimc/ekaii-web-app:latest --target prod -f ./docker/web/Dockerfile .
       - name: Push Docker Image
         run: |
           docker push ghcr.io/ekaiimc/ekaii-web-app:${{ env.VERSION }}
-          docker tag ghcr.io/ekaiimc/ekaii-web-app:${{ env.VERSION }} ghcr.io/ekaiimc/ekaii-web-app:latest
+          docker push ghcr.io/ekaiimc/ekaii-web-app:latest
