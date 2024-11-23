@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "npm run start:db && npm run start:app",
-    "start:app": "next start",
+    "start:app": "NODE_ENV=production node server.js",
     "start:db": "prisma migrate deploy",
     "preversion": "npm run lint && npm run test",
     "postversion": "git push && git push --tags",
