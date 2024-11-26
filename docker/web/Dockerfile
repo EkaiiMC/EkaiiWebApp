@@ -38,4 +38,4 @@ COPY --chown=nextjs:nodejs docker-bootstrap-app.sh ./
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000
-CMD ["./docker-bootstrap-app.sh"]
+CMD ["sh","./docker-bootstrap-app.sh"]
