@@ -1,38 +1,41 @@
-FROM node:lts-alpine AS base
-RUN apk add --no-cache g++ make py3-pip libc6-compat
+# Adapted from https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+# Install dependencies only when needed
+FROM node:22-alpine AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY package*.json ./
-EXPOSE 3000
+COPY package.json package-lock.json ./
+RUN npm config set strict-ssl false # FIXME, remove this line when the issue is fixed
+RUN npm ci
 
-FROM base AS builder
+# Rebuild the source code only when needed
+FROM node:22-alpine AS builder
 WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm config set strict-ssl false # This is to remove the bug of long install times, remove when fixed
-RUN npm install
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN npx prisma generate                   # <---important to support Prisma query engine in Alpine Linux in final image
 RUN npm run build
-RUN npx prisma generate
 
-FROM base AS prod
+# Production image, copy all the files and run next
+FROM node:22-alpine AS prod
 WORKDIR /app
-
 ENV NODE_ENV=production
-RUN npm config set strict-ssl false # This is to remove the bug of long install times, remove when fixed
-RUN npm ci --verbose
-
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
-USER nextjs
-
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+RUN mkdir -p /app/logs && chown -R nextjs:nodejs /app/logs
+# You only need to copy next.config.js if you are NOT using the default configuration
+COPY --from=builder /app/next.config.mjs ./
+COPY --chown=nextjs:nodejs --from=builder /app/public ./public
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/prisma ./prisma
-
-CMD ["npm", "start"]
-
-FROM base AS dev
-ENV NODE_ENV=development
-RUN npm install
-COPY . .
-CMD npm run dev
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --chown=nextjs:nodejs prisma ./prisma/
+COPY --chown=nextjs:nodejs docker-bootstrap-app.sh ./
+USER nextjs
+EXPOSE 3000
+ENV PORT=3000
+CMD ["./docker-bootstrap-app.sh"]

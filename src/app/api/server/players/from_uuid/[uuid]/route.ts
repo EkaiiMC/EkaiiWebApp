@@ -1,6 +1,8 @@
 import {NextRequest, NextResponse} from "next/server";
 import {getPlayerUsernameFromUUID, removeDashes} from "@/mc-utils";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest, props: {params: Promise<{uuid: string}>}) {
   const uuid = (await props.params).uuid;
   const playerUuid = removeDashes(uuid);

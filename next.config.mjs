@@ -6,10 +6,14 @@ const nextConfig = {
                 "protocol": "https",
                 "hostname": "mc-heads.net",
             },
+            {
+                "protocol": "https",
+                "hostname": "**.ekaii.fr",
+            }
         ],
     },
     reactStrictMode: true,
-    webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    webpack: (config, { _, __, ___, ____, webpack }) => {
         config.plugins.push(
             new webpack.IgnorePlugin({ resourceRegExp: /osx-temperature-sensor/ })
         );
@@ -22,6 +26,7 @@ const nextConfig = {
         }
         return config
     },
+    output: "standalone",
     async headers() {
         return [
             {

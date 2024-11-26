@@ -3,6 +3,8 @@ import Counter from "@/components/counter";
 import PinkHoverDisplay from "@/components/pink-hover-display";
 import {Metadata} from "next";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata : Metadata = {
   title: 'À propos'
 }

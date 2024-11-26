@@ -1,6 +1,8 @@
 import {NextRequest, NextResponse} from "next/server";
-import {ApiScope, checkAccess, generateApiKey, getKeys, isMaintainer, isWhitelisterOrMore} from "@/api-auth";
+import {ApiScope, checkAccess, generateApiKey, getKeys, isMaintainer} from "@/api-auth";
 import {auth} from "@/auth";
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   const key = req.headers.get('Authorization')?.split(' ')[1];

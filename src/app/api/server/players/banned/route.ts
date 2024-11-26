@@ -1,6 +1,8 @@
 import {NextRequest, NextResponse} from "next/server";
-import {checkAccess, isMaintainer, isWhitelisterOrMore} from "@/api-auth";
+import {checkAccess, isWhitelisterOrMore} from "@/api-auth";
 import {auth} from "@/auth";
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   const key = req.headers.get('Authorization')?.split(' ')[1];

@@ -48,7 +48,7 @@ const DraggablePicture = ({ picture, index, movePicture, openModal, endDrag }: {
   );
 };
 
-const Modal = ({ modalType, currentPicture, newPicture, handleInputChange, handleSubmit, handleDelete, handleEditSubmit, setIsModalOpen }: any) => {
+const Modal = ({ modalType, currentPicture, newPicture, handleInputChange, handleSubmit, handleDelete, handleEditSubmit, setIsModalOpen, loading }: any) => {
   const renderModalContent = () => (
     <form onSubmit={modalType === "add" ? handleSubmit : modalType === 'delete' ? handleDelete : handleEditSubmit} className="text-black flex flex-col flex-wrap min-w-80">
       {modalType !== "delete" && (
@@ -95,14 +95,15 @@ const Modal = ({ modalType, currentPicture, newPicture, handleInputChange, handl
           Annuler
         </button>
         <button type="submit" className="px-2 py-1 bg-greenText hover:bg-green-600 transition-colors duration-300">
-          {modalType === "delete" ? "Supprimer" : "Confirmer"}
+          {loading ? "Loading..." : (modalType === "delete" ? "Supprimer" : "Confirmer")}
         </button>
       </div>
     </form>
   );
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center" onClick={() => setIsModalOpen(false)}>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+         onClick={() => setIsModalOpen(false)}>
       <div className="bg-bgLightGray p-5 flex flex-col" onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between mb-4">
           <h2 className="text-2xl">{modalType === "add" ? "Ajouter une image" : modalType === "edit" ? "Modifier l'image" : "Confirmer la suppression"}</h2>
@@ -119,6 +120,7 @@ export default function GalleryManager() {
   const [modalType, setModalType] = useState<"add" | "edit" | "delete">("add");
   const [currentPicture, setCurrentPicture] = useState<Picture | null>(null);
   const [newPicture, setNewPicture] = useState<{ file: File | null; title: string; author: string; description: string; }>({ file: null, title: "", author: "", description: "" });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchGallery();
@@ -145,6 +147,7 @@ export default function GalleryManager() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when request starts
     const formData = new FormData();
     if (newPicture.file) formData.append("file", newPicture.file);
     formData.append("title", newPicture.title);
@@ -158,11 +161,14 @@ export default function GalleryManager() {
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error creating new picture:", error);
+    } finally {
+      setLoading(false); // Set loading to false when request ends
     }
   };
 
   const handleDelete = async () => {
     if (!currentPicture) return;
+    setLoading(true); // Set loading to true when request starts
     try {
       const response = await fetch(`/api/gallery/${currentPicture.id}`, { method: "DELETE" });
       if (!response.ok) throw new Error("Failed to delete picture");
@@ -170,12 +176,15 @@ export default function GalleryManager() {
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error deleting picture:", error);
+    } finally {
+      setLoading(false); // Set loading to false when request ends
     }
   };
 
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentPicture) return;
+    setLoading(true); // Set loading to true when request starts
     const formData = new FormData();
     formData.append("title", currentPicture?.title || "");
     formData.append("author", currentPicture?.author || "");
@@ -188,6 +197,8 @@ export default function GalleryManager() {
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error updating picture:", error);
+    } finally {
+      setLoading(false); // Set loading to false when request ends
     }
   };
 
@@ -244,6 +255,7 @@ export default function GalleryManager() {
             handleDelete={handleDelete}
             handleEditSubmit={handleEditSubmit}
             setIsModalOpen={setIsModalOpen}
+            loading={loading}
           />
         )}
       </div>

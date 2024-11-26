@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --experimental-build-mode compile",
-    "generate": "next build --experimental-build-mode generate",
-    "start": "npm run start:db && npm run generate && npm run start:app",
-    "start:app": "NODE_ENV=production node server.js",
+    "build": "next build",
+    "start": "npm run start:db && npm run start:app",
+    "start:app": "node .next/standalone/server.js",
     "start:db": "prisma migrate deploy",
     "preversion": "npm run lint && npm run test",
     "postversion": "git push && git push --tags",

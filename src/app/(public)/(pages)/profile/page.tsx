@@ -8,6 +8,8 @@ export const metadata : Metadata = {
   title: 'Profil'
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function Profile() {
   const session = await auth();
 

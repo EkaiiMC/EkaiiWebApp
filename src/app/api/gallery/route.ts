@@ -1,9 +1,10 @@
 import {NextRequest, NextResponse} from "next/server";
-import {writeFile} from "fs/promises";
 import prisma from "@/db";
 import {logger} from "@/logger";
 import {checkAccess, isDesignerOrMore, isWhitelisterOrMore} from "@/api-auth";
 import {auth} from "@/auth";
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) : Promise<NextResponse> {
   const key = req.headers.get('Authorization')?.split(' ')[1];
@@ -50,6 +51,11 @@ export async function POST(req: NextRequest) : Promise<NextResponse> {
     }
   }
 
+  if(!process.env.ZIPLINE_URL || !process.env.ZIPLINE_TOKEN || !process.env.ZIPLINE_PUBLIC_URL) {
+    logger.error('Env is not configured');
+    return NextResponse.json({error: 'env not configured'}, {status: 500});
+  }
+
   const formData = await req.formData();
 
   const file = formData.get('file') as File | null;
@@ -69,11 +75,27 @@ export async function POST(req: NextRequest) : Promise<NextResponse> {
 
   const description = formData.get('description') as string | null;
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const fileName = file.name.replaceAll(' ', '_');
-  const filePath = `/uploads/${fileName}`;
   try {
-    await writeFile('public'+filePath, buffer);
+    const formDataZipline = new FormData();
+    formDataZipline.append('file', file);
+    const res = await fetch(process.env.ZIPLINE_URL+'/api/upload', {
+      method: 'POST',
+      headers: {
+        'Authorization': process.env.ZIPLINE_TOKEN,
+        'Accept': 'application/json'
+      },
+      body: formDataZipline
+    });
+
+    if (!res.ok) {
+      logger.error('Failed to upload file, returned status: '+res.status);
+      return NextResponse.json({error: 'Failed to upload file'}, {status: 500});
+    }
+    const data = await res.json();
+    const filePathRes = data.files[0];
+    const fileName = filePathRes.split('/').pop();
+    const filePath = process.env.ZIPLINE_PUBLIC_URL+'/u/'+fileName;
+
     await prisma.galleryItem.create({
       data: {
         author,

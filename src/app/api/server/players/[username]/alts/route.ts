@@ -3,6 +3,8 @@ import {auth} from "@/auth";
 import {checkAccess, isWhitelisterOrMore} from "@/api-auth";
 import prisma from "@/db";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest, props: { params: { username: string } }) {
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {

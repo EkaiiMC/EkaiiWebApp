@@ -1,7 +1,9 @@
 import {NextRequest, NextResponse} from "next/server";
 import {auth} from "@/auth";
-import {checkAccess, isDesignerOrMore, isMaintainer} from "@/api-auth";
+import {checkAccess, isMaintainer} from "@/api-auth";
 import prisma from "@/db";
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   const key = req.headers.get('Authorization')?.split(' ')[1];

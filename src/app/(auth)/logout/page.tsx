@@ -2,7 +2,6 @@ import {auth, signOut} from "@/auth";
 import {redirect} from "next/navigation";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
-import Image from "next/image";
 
 export default async function LogoutPage() {
   const session = await auth();

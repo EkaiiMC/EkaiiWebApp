@@ -2,6 +2,8 @@ import {Pack, PackSkeleton} from "@/components/modpack";
 import {Suspense} from "react";
 import {Metadata} from "next";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata : Metadata = {
   title: 'Modpack'
 }

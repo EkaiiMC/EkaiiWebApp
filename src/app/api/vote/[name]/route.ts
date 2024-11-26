@@ -3,7 +3,8 @@ import prisma from "@/db";
 import ExpiryMap from "expiry-map";
 import {auth} from "@/auth";
 import {getVotingDelta} from "@/utils";
-import {VoteSite} from "@prisma/client";
+
+export const dynamic = 'force-dynamic';
 
 const rateLimits : {[key : string]: ExpiryMap} = {
   'serveur-prive.net': new ExpiryMap(5000),

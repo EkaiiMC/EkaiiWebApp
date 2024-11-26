@@ -1,5 +1,4 @@
 import {logger} from "@/logger";
-import {NextResponse} from "next/server";
 
 const STATUS_CACHE_MINUTES = 1;
 const DISCORD_MEMBERS_CACHE_MINUTES = 24 * 60; // 24 hours
@@ -22,6 +21,7 @@ let cachedServerStatus: any = null;
 let cacheTimestampStatus: number | null = null;
 
 export async function getServerStatus() {
+  'use server';
   const cacheDuration = STATUS_CACHE_MINUTES * 60 * 1000; // 1 minute in milliseconds
 
   if (cachedServerStatus !== null && cacheTimestampStatus !== null) {
@@ -71,6 +71,7 @@ let cachedMemberCount: number | null = null;
 let cacheTimestamp: number | null = null;
 
 export async function getDiscordMembersCount() {
+  'use server';
   const cacheDuration = DISCORD_MEMBERS_CACHE_MINUTES * 60 * 1000;
 
   if (cachedMemberCount !== null && cacheTimestamp !== null) {

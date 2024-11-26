@@ -3,8 +3,8 @@ import {auth} from "@/auth";
 import {checkAccess, isDesignerOrMore} from "@/api-auth";
 import prisma from "@/db";
 import {logger} from "@/logger";
-import {writeFile} from "fs/promises";
-import {unlink} from "node:fs";
+
+export const dynamic = 'force-dynamic';
 
 export async function DELETE(req: NextRequest, props: { params: { id: string } }) : Promise<NextResponse> {
   const key = req.headers.get('Authorization')?.split(' ')[1];
@@ -27,17 +27,49 @@ export async function DELETE(req: NextRequest, props: { params: { id: string } }
     }
   }
 
+  if(!process.env.ZIPLINE_URL || !process.env.ZIPLINE_TOKEN) {
+    logger.error('Env is not configured');
+    return NextResponse.json({error: 'env not configured'}, {status: 500});
+  }
+
   const id = props.params.id;
   const item = await prisma.galleryItem.findUnique({where: {id}});
   if (!item) return NextResponse.json({error: 'Item not found'}, {status: 404});
 
   try {
-    const filePath = 'public'+item.imagePath;
-    unlink(filePath, (err) => {
-      if (err) {
-        logger.error(err);
-      }
+    const fileName = item.imagePath.split('/').pop();
+    if (!fileName) return NextResponse.json({error: 'Failed to delete item, error when parsing fileName'}, {status: 500});
+    // first get all images to get the id of the image to delete
+    const resGet = await fetch(process.env.ZIPLINE_URL + '/api/user/files', {
+      headers: {
+        'Authorization': process.env.ZIPLINE_TOKEN
+      },
     });
+    if (!resGet.ok) {
+      logger.error('Failed to get images with status code ' + resGet.status);
+      return NextResponse.json({error: 'Failed to get images'}, {status: 500});
+    }
+    const data = await resGet.json();
+    const image = data.find((image: {name: string, id: string}) => image.name === fileName);
+    if (!image) return NextResponse.json({error: 'Failed to get image id'}, {status: 500});
+
+    const reqBody = JSON.stringify({id: parseInt(image.id, 10)});
+    // then delete the image
+    const resDelete = await fetch(process.env.ZIPLINE_URL + '/api/user/files', {
+      method: 'DELETE',
+      headers: {
+        'Authorization': process.env.ZIPLINE_TOKEN,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: reqBody
+    });
+
+    if (!resDelete.ok) {
+      logger.error('Failed to delete image with status code ' + resDelete.status + ' and body ' + await resDelete.json());
+      return NextResponse.json({error: 'Failed to delete image'}, {status: 500});
+    }
+
     await prisma.galleryItem.delete({where: {id}});
     return NextResponse.json({success: 'Item deleted'});
   } catch (e) {
@@ -73,7 +105,6 @@ export async function PATCH(req: NextRequest, props: { params: { id: string } })
 
   const formData = await req.formData();
 
-  const file = formData.get('file') as File | null;
   const title = formData.get('title') as string | null;
   const author = formData.get('author') as string | null;
   const description = formData.get('description') as string | null;
@@ -84,24 +115,6 @@ export async function PATCH(req: NextRequest, props: { params: { id: string } })
   if (author) updateData.author = author;
   if (description) updateData.description = description;
   if (rank) updateData.rank = parseInt(rank);
-
-  if (file) {
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const fileName = file.name.replaceAll(' ', '_');
-    const filePath = `/uploads/${fileName}`;
-    try {
-      unlink('public'+item.imagePath, (err) => {
-        if (err) {
-          logger.error(err);
-        }
-      });
-      await writeFile('public'+filePath, buffer);
-      updateData.imagePath = filePath;
-    } catch (e) {
-      logger.error(e);
-      return NextResponse.json({error: 'Failed to upload file'}, {status: 500});
-    }
-  }
 
   try {
     await prisma.galleryItem.update({where: {id}, data: updateData});

@@ -1,7 +1,9 @@
 import {NextRequest, NextResponse} from "next/server";
-import {checkAccess, isDeveloperOrMore, isMaintainer} from "@/api-auth";
+import {checkAccess, isMaintainer} from "@/api-auth";
 import {auth} from "@/auth";
 import prisma from "@/db";
+
+export const dynamic = 'force-dynamic';
 
 export async function PUT(req: NextRequest, { params } : { params: { id: string } }) {
   const id = params.id;

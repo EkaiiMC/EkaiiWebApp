@@ -3,6 +3,8 @@ import prisma from '@/db';
 import {auth} from "@/auth";
 import {checkAccess, isDesignerOrMore} from "@/api-auth";
 
+export const dynamic = 'force-dynamic';
+
 export async function PATCH(req: NextRequest) {
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
