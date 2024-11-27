@@ -10,11 +10,6 @@ export const metadata: Metadata = {
     title: 'Galerie',
     description: 'La galerie d\'images d\'Ekaii. Découvrez les créations de notre communauté !',
     url: 'https://www.ekaii.fr/gallery',
-    images: [
-      {
-        url: "https://avatars.githubusercontent.com/u/155087037?s=200&v=4"
-      },
-    ],
     locale: 'fr_FR',
     type: 'website',
     siteName: 'Ekaii',

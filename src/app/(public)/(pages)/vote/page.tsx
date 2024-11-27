@@ -14,11 +14,6 @@ export const metadata : Metadata = {
     title: 'Voter',
     description: 'Voter est le moyen le plus efficace de faire connaître le serveur, en plus, les membres qui votent reçoivent des récompenses !',
     url: 'https://www.ekaii.fr/vote',
-    images: [
-      {
-        url: "https://avatars.githubusercontent.com/u/155087037?s=200&v=4"
-      },
-    ],
     locale: 'fr_FR',
     type: 'website',
     siteName: 'Ekaii',

@@ -11,11 +11,6 @@ export const metadata : Metadata = {
     title: 'Modpack',
     description: 'Notre modpack customisé pour Ekaii, pour une expérience de jeu optimale.',
     url: 'https://www.ekaii.fr/modpack',
-    images: [
-      {
-        url: "https://avatars.githubusercontent.com/u/155087037?s=200&v=4"
-      },
-    ],
     locale: 'fr_FR',
     type: 'website',
     siteName: 'Ekaii',

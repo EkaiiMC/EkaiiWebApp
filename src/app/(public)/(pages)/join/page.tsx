@@ -10,11 +10,6 @@ export const metadata : Metadata = {
     title: 'Rejoindre',
     description: 'Rejoignez Ekaii, et créez votre propre histoire sur notre serveur.',
     url: 'https://www.ekaii.fr/join',
-    images: [
-      {
-        url: "https://avatars.githubusercontent.com/u/155087037?s=200&v=4"
-      },
-    ],
     locale: 'fr_FR',
     type: 'website',
     siteName: 'Ekaii',
