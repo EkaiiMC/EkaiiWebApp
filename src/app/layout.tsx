@@ -5,12 +5,15 @@ import {monocraft, rubik} from "@/fonts/fonts";
 export const metadata: Metadata = {
   title: {default: "Ekaii", template: "Ekaii | %s"},
   description: "Ekaii a pour objectif d'être la survie Minecraft ultime. Sans plugins, sans claims, sans resets. Le jeu, tel qu'il est. Et vous ? Quand allez-vous créer votre propre histoire sur Ekaii ?",
+  keywords: ["minecraft", "survie", "vanilla", "serveur", "communauté", "jeu", "jeu vidéo", "jeux vidéo", "ekaii", "ekaii.fr"],
   openGraph: {
     title: "Accueil",
     description: "Ekaii a pour objectif d'être la survie Minecraft ultime. Sans plugins, sans claims, sans resets. Le jeu, tel qu'il est. Et vous ? Quand allez-vous créer votre propre histoire sur Ekaii ?",
     images: [
       {
-        url: "https://sharex.ekaii.fr/u/E4Gmen.png"
+        url: "http://sharex.ekaii.fr/u/0QQ1uw.png",
+        width: 64,
+        height: 64,
       },
     ],
     url: "https://www.ekaii.fr",
