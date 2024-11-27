@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'Ekaii',
   },
+  twitter: {
+    card: 'summary',
+  }
 };
 
 export const viewport: Viewport = {
