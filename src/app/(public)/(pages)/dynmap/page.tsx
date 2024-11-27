@@ -3,7 +3,13 @@ import {Metadata} from "next";
 export const dynamic = 'force-dynamic';
 
 export const metadata : Metadata = {
-  title: 'Dynmap'
+  title: 'Dynmap',
+  description: 'La carte interactive d\'Ekaii, pour vous permettre de vous repérer facilement.',
+  openGraph: {
+    title: 'Dynmap',
+    description: 'La carte interactive d\'Ekaii, pour vous permettre de vous repérer facilement.',
+    url: 'https://www.ekaii.fr/dynmap',
+  }
 }
 
 export default function DynMap() {

@@ -4,7 +4,13 @@ import {Metadata} from "next";
 export const dynamic = 'force-dynamic';
 
 export const metadata : Metadata = {
-  title: 'Rejoindre'
+  title: 'Rejoindre',
+  description: 'Rejoignez Ekaii, et créez votre propre histoire sur notre serveur.',
+  openGraph: {
+    title: 'Rejoindre',
+    description: 'Rejoignez Ekaii, et créez votre propre histoire sur notre serveur.',
+    url: 'https://www.ekaii.fr/join',
+  }
 }
 
 export default function About() {

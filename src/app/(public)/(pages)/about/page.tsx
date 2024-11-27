@@ -6,7 +6,13 @@ import {Metadata} from "next";
 export const dynamic = 'force-dynamic';
 
 export const metadata : Metadata = {
-  title: 'À propos'
+  title: 'À propos',
+  description: 'Découvrez ce qu\'est Ekaii, et pourquoi vous devriez nous rejoindre.',
+  openGraph: {
+    title: 'À propos',
+    description: 'Découvrez ce qu\'est Ekaii, et pourquoi vous devriez nous rejoindre.',
+    url: 'https://www.ekaii.fr/about',
+  }
 }
 
 export default async function About() {

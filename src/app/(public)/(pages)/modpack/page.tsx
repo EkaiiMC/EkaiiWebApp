@@ -5,7 +5,13 @@ import {Metadata} from "next";
 export const dynamic = 'force-dynamic';
 
 export const metadata : Metadata = {
-  title: 'Modpack'
+  title: 'Modpack',
+  description: 'Notre modpack customisé pour Ekaii, pour une expérience de jeu optimale.',
+  openGraph: {
+    title: 'Modpack',
+    description: 'Notre modpack customisé pour Ekaii, pour une expérience de jeu optimale.',
+    url: 'https://www.ekaii.fr/modpack',
+  }
 }
 
 export default function Modpack() {

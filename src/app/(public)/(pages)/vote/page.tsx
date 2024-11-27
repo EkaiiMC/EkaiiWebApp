@@ -8,7 +8,13 @@ import {Metadata} from "next";
 export const dynamic = 'force-dynamic';
 
 export const metadata : Metadata = {
-  title: 'Voter'
+  title: 'Voter',
+  description: 'Voter est le moyen le plus efficace de faire connaître le serveur, en plus, les membres qui votent reçoivent des récompenses !',
+  openGraph: {
+    title: 'Voter',
+    description: 'Voter est le moyen le plus efficace de faire connaître le serveur, en plus, les membres qui votent reçoivent des récompenses !',
+    url: 'https://www.ekaii.fr/vote',
+  }
 }
 
 export default async function Vote() {

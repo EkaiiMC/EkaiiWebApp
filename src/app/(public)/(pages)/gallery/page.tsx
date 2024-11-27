@@ -4,7 +4,13 @@ import React from "react";
 import {Metadata} from "next";
 
 export const metadata: Metadata = {
-  title: 'Galerie'
+  title: 'Galerie',
+  description: 'La galerie d\'images d\'Ekaii. Découvrez les créations de notre communauté !',
+  openGraph: {
+    title: 'Galerie',
+    description: 'La galerie d\'images d\'Ekaii. Découvrez les créations de notre communauté !',
+    url: 'https://www.ekaii.fr/gallery',
+  }
 }
 
 export const dynamic = 'force-dynamic';
