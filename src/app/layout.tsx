@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     description: "Ekaii a pour objectif d'être la survie Minecraft ultime. Sans plugins, sans claims, sans resets. Le jeu, tel qu'il est. Et vous ? Quand allez-vous créer votre propre histoire sur Ekaii ?",
     images: [
       {
-        url: "http://sharex.ekaii.fr/u/0QQ1uw.png",
+        url: "https://avatars.githubusercontent.com/u/155087037?s=200&v=4",
         width: 64,
         height: 64,
       },

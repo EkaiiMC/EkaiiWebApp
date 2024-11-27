@@ -11,7 +11,7 @@ export const metadata : Metadata = {
     url: 'https://www.ekaii.fr/dynmap',
     images: [
       {
-        url: "https://sharex.ekaii.fr/u/E4Gmen.png"
+        url: "https://avatars.githubusercontent.com/u/155087037?s=200&v=4"
       },
     ],
     locale: 'fr_FR',

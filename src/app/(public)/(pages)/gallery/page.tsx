@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     url: 'https://www.ekaii.fr/gallery',
     images: [
       {
-        url: "https://sharex.ekaii.fr/u/E4Gmen.png"
+        url: "https://avatars.githubusercontent.com/u/155087037?s=200&v=4"
       },
     ],
     locale: 'fr_FR',
