@@ -10,6 +10,14 @@ export const metadata: Metadata = {
     title: 'Galerie',
     description: 'La galerie d\'images d\'Ekaii. Découvrez les créations de notre communauté !',
     url: 'https://www.ekaii.fr/gallery',
+    images: [
+      {
+        url: "https://sharex.ekaii.fr/u/E4Gmen.png"
+      },
+    ],
+    locale: 'fr_FR',
+    type: 'website',
+    siteName: 'Ekaii',
   }
 }
 

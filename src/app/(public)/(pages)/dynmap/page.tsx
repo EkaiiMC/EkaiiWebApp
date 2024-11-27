@@ -9,6 +9,14 @@ export const metadata : Metadata = {
     title: 'Dynmap',
     description: 'La carte interactive d\'Ekaii, pour vous permettre de vous repérer facilement.',
     url: 'https://www.ekaii.fr/dynmap',
+    images: [
+      {
+        url: "https://sharex.ekaii.fr/u/E4Gmen.png"
+      },
+    ],
+    locale: 'fr_FR',
+    type: 'website',
+    siteName: 'Ekaii',
   }
 }
 

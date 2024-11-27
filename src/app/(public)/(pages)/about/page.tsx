@@ -11,6 +11,14 @@ export const metadata : Metadata = {
   openGraph: {
     title: 'À propos',
     description: 'Découvrez ce qu\'est Ekaii, et pourquoi vous devriez nous rejoindre.',
+    images: [
+      {
+        url: "https://sharex.ekaii.fr/u/E4Gmen.png"
+      },
+    ],
+    locale: 'fr_FR',
+    type: 'website',
+    siteName: 'Ekaii',
     url: 'https://www.ekaii.fr/about',
   }
 }
