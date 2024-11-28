@@ -6,7 +6,7 @@ import {logger} from "@/logger";
 
 export const dynamic = 'force-dynamic';
 
-export async function DELETE(req: NextRequest, props: { params: { id: string } }) : Promise<NextResponse> {
+export async function DELETE(req: NextRequest, props: { params: Promise<{ id: string }> }) : Promise<NextResponse> {
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();
@@ -32,7 +32,7 @@ export async function DELETE(req: NextRequest, props: { params: { id: string } }
     return NextResponse.json({error: 'env not configured'}, {status: 500});
   }
 
-  const id = props.params.id;
+  const id = (await props.params).id;
   const item = await prisma.galleryItem.findUnique({where: {id}});
   if (!item) return NextResponse.json({error: 'Item not found'}, {status: 404});
 
@@ -66,7 +66,7 @@ export async function DELETE(req: NextRequest, props: { params: { id: string } }
     });
 
     if (!resDelete.ok) {
-      logger.error('Failed to delete image with status code ' + resDelete.status + ' and body ' + await resDelete.json());
+      logger.error('Failed to delete image with status code ' + resDelete.status + ' and body ' + (await resDelete.json()));
       return NextResponse.json({error: 'Failed to delete image'}, {status: 500});
     }
 
@@ -78,7 +78,7 @@ export async function DELETE(req: NextRequest, props: { params: { id: string } }
   }
 }
 
-export async function PATCH(req: NextRequest, props: { params: { id: string } }) : Promise<NextResponse> {
+export async function PATCH(req: NextRequest, props: { params: Promise<{ id: string }> }) : Promise<NextResponse> {
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();
@@ -99,7 +99,7 @@ export async function PATCH(req: NextRequest, props: { params: { id: string } })
     }
   }
 
-  const id = props.params.id;
+  const id = (await props.params).id;
   const item = await prisma.galleryItem.findUnique({where: {id}});
   if (!item) return NextResponse.json({error: 'Item not found'}, {status: 404});
 

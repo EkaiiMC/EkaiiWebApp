@@ -5,7 +5,7 @@ import prisma from "@/db";
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest, props: { params: { username: string } }) {
+export async function GET(req: NextRequest, props: { params: Promise<{ username: string }> }) {
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest, props: { params: { username: string 
     }
   }
 
-  const username = props.params.username;
+  const username = (await props.params).username;
   const belongsTo = await prisma.altAccount.findFirst({
     select: {
       belongsTo: true
@@ -52,7 +52,7 @@ export async function GET(req: NextRequest, props: { params: { username: string 
 
 }
 
-export async function POST(req: NextRequest, props: { params: { username: string } }) {
+export async function POST(req: NextRequest, props: { params: Promise<{ username: string }> }) {
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest, props: { params: { username: string
 
   const body = await req.json();
 
-  const username = props.params.username;
+  const username = (await props.params).username;
   const belongsTo = body.altAccUsername;
 
   if (!belongsTo) {
@@ -92,7 +92,7 @@ export async function POST(req: NextRequest, props: { params: { username: string
   return NextResponse.json({message: 'success', username: belongsTo, belongsTo: username});
 }
 
-export async function DELETE(req: NextRequest, props: { params: { username: string } }) {
+export async function DELETE(req: NextRequest, props: { params: Promise<{ username: string }> }) {
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();
@@ -115,7 +115,7 @@ export async function DELETE(req: NextRequest, props: { params: { username: stri
 
   const body = await req.json();
 
-  const username = props.params.username;
+  const username = (await props.params).username;
   const belongsTo = body.altAccUsername as string;
 
   if (!belongsTo) {

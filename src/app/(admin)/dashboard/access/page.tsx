@@ -6,7 +6,8 @@ import Whitelist from "@/components/whitelist";
 import Roles from "@/components/roles";
 import APIKeys from "@/components/api-keys";
 
-export default async function AccessPage({ searchParams }: { searchParams: { manage?: string } }) {
+export default async function AccessPage(props: { searchParams: Promise<{ manage?: string }> }) {
+  const searchParams = await props.searchParams;
   const session = await auth();
 
   if (!session || !session.user || !isWhitelisterOrMore((session.user as User & { role: string }).role)) {

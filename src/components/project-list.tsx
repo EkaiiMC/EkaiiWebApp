@@ -18,7 +18,7 @@ export function ProjectListSkeleton() {
   let elmt: ReactNode[] = [];
   for (let i = 0; i < 7; i++) {
     elmt.push(
-      <div className={'flex justify-start align-center bg-bgDarkGray animate-pulse h-[100px] w-full mb-2'}/>
+      <div key={i} className={'flex justify-start align-center bg-bgDarkGray animate-pulse h-[100px] w-full mb-2'}/>
     );
   }
 

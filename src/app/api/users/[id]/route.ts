@@ -5,7 +5,8 @@ import prisma from "@/db";
 
 export const dynamic = 'force-dynamic';
 
-export async function PUT(req: NextRequest, { params } : { params: { id: string } }) {
+export async function PUT(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const id = params.id;
 
   const key = req.headers.get('Authorization')?.split(' ')[1];

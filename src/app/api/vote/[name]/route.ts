@@ -11,8 +11,9 @@ const rateLimits : {[key : string]: ExpiryMap} = {
   'serveur-minecraft-vote.fr': new ExpiryMap(5000),
 }
 
-export async function GET(req: NextRequest, { params }: { params: { name: string } }) {
-  const ip = req.headers.get('x-real-ip') || req.headers.get('x-forwarded-for')?.split(', ')[0] || req.ip;
+export async function GET(req: NextRequest, props: { params: Promise<{ name: string }> }) {
+  const params = await props.params;
+  const ip = req.headers.get('x-real-ip') || req.headers.get('x-forwarded-for')?.split(', ')[0];
 
   // Rate limiting
   if (rateLimits[params.name] && rateLimits[params.name].has(ip)) {

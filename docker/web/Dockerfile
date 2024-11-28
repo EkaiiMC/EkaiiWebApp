@@ -6,7 +6,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm config set strict-ssl false # FIXME, remove this line when the issue is fixed
-RUN npm ci
+RUN npm ci --legacy-peer-deps # FIXME, remove --legacy-peer-deps when react 19 releases
 
 # Rebuild the source code only when needed
 FROM node:22-alpine AS builder

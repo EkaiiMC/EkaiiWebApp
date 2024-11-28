@@ -5,7 +5,7 @@ import prisma from "@/db";
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest, props: { params : { id: string }}) {
+export async function GET(req: NextRequest, props: { params : Promise<{ id: string }>}) {
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest, props: { params : { id: string }}) {
     }
   }
 
-  const id = props.params.id;
+  const id = (await props.params).id;
   if (!id) {
     return NextResponse.json({message: 'Missing id'}, {status: 400});
   }
@@ -40,7 +40,7 @@ export async function GET(req: NextRequest, props: { params : { id: string }}) {
   return NextResponse.json(site);
 }
 
-export async function PATCH(req: NextRequest, props: { params : { id: string }}) {
+export async function PATCH(req: NextRequest, props: { params : Promise<{ id: string }>}) {
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();
@@ -61,7 +61,7 @@ export async function PATCH(req: NextRequest, props: { params : { id: string }})
     }
   }
 
-  const id = props.params.id;
+  const id = (await props.params).id;
 
   if (!id) {
     return NextResponse.json({message: 'Missing id'}, {status: 400});
@@ -83,7 +83,7 @@ export async function PATCH(req: NextRequest, props: { params : { id: string }})
   return NextResponse.json(site);
 }
 
-export async function DELETE(req: NextRequest, props: { params : { id: string }}) {
+export async function DELETE(req: NextRequest, props: { params : Promise<{ id: string }>}) {
   const key = req.headers.get('Authorization')?.split(' ')[1];
   if (!key) {
     const session = await auth();
@@ -104,7 +104,7 @@ export async function DELETE(req: NextRequest, props: { params : { id: string }}
     }
   }
 
-  const id = props.params.id;
+  const id = (await props.params).id;
 
   if (!id) {
     return NextResponse.json({message: 'Missing id'}, {status: 400});
