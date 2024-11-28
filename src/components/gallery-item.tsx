@@ -28,7 +28,7 @@ export default function GalleryList({images}: { images: GalleryItem[] }) {
               <p className={'absolute bottom-0 text-center mb-3 w-full'}>
                 {image.description}
                 <br/>
-                <span className={'italic'}>screenshot par {image.author}</span>
+                <span className={'italic'}>Screenshot par {image.author}</span>
               </p>
             </div>
           </div>
