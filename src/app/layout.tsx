@@ -30,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={'h-full'}>
-      <body className={`${rubik.className} ${monocraft.variable} min-h-full`}>
+      <body className={`${rubik.className} ${monocraft.variable} min-h-full bg-bgGray`}>
         {children}
       </body>
     </html>
