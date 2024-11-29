@@ -4,7 +4,7 @@ import Dropdown from "@/components/dropdown";
 
 export default function Header() {
   return (
-    <header className="navbar:bg-navbarGradient h-[120px] fixed w-full z-50">
+    <header className="navbar:bg-navbarGradient h-[120px] fixed w-full z-20">
       <nav className="justify-between mt-3 ml-5 mr-5 hidden navbar:flex">
         <ButtonArray />
         <LoginButton />
