@@ -8,7 +8,7 @@
     "start": "npm run start:db && npm run start:app",
     "start:app": "node .next/standalone/server.js",
     "start:db": "prisma migrate deploy",
-    "preversion": "npm run lint && npm run test",
+    "preversion": "npm run lint && npm run test && npm run build",
     "postversion": "git push && git push --tags",
     "lint": "next lint",
     "test": "jest"
