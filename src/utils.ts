@@ -11,7 +11,11 @@ export function getVotingDelta(site: string): Date {
   switch (site) {
     case 'serveur-prive.net':
     case 'serveur-minecraft-vote.fr':
-      return new Date(90 * 60 * 1000);
+      return new Date(90 * 60 * 1000); // 1.5 hours
+    case 'serveur-minecraft.com':
+      return new Date(180 * 60 * 1000); // 3 hours
+    case 'serveurs-minecraft.org':
+      return new Date(24 * 60 * 60 * 1000); // 24 hours
     default:
       throw new Error('Unknown voting site');
   }

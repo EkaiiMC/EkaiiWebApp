@@ -109,12 +109,28 @@ export async function PATCH(req: NextRequest, props: { params: Promise<{ id: str
   const author = formData.get('author') as string | null;
   const description = formData.get('description') as string | null;
   const rank = formData.get('rank') as string | null;
+  const builder = formData.get('builder') as string | null;
+  const coords_x = formData.get('coords_x') as string | null;
+  const coords_y = formData.get('coords_y') as string | null;
+  const coords_z = formData.get('coords_z') as string | null;
+  const coords_dimension = formData.get('coords_dimension') as 'overworld' | "nether" | "end" | null;
 
-  const updateData: {title?: string, author?: string, description?: string, imagePath?: string, rank?: number} = {};
+
+  const updateData: {title?: string, author?: string, description?: string, imagePath?: string, rank?: number, builder?: string, coords?: object} = {};
   if (title) updateData.title = title;
   if (author) updateData.author = author;
   if (description) updateData.description = description;
   if (rank) updateData.rank = parseInt(rank);
+  if (builder) updateData.builder = builder;
+  // GalleryCoords
+  if (coords_x && coords_y && coords_z && coords_dimension) {
+    updateData.coords = {
+      x: parseFloat(coords_x),
+      y: parseFloat(coords_y),
+      z: parseFloat(coords_z),
+      dimension: coords_dimension
+    };
+  }
 
   try {
     await prisma.galleryItem.update({where: {id}, data: updateData});

@@ -4,7 +4,6 @@ import {isDesignerOrMore} from "@/api-auth";
 import {User} from "@auth/core/types";
 import {ProjectList, ProjectListSkeleton} from "@/components/project-list";
 import {Suspense} from "react";
-import Modal from "react-modal";
 import ProjectHeader from "@/components/project-header";
 import {CloseButton} from "@/components/modals";
 

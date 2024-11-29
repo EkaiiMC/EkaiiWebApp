@@ -1,6 +1,6 @@
 import GalleryManager from "@/components/gallery-manager";
 import {auth} from "@/auth";
-import {isDesignerOrMore, isWhitelisterOrMore} from "@/api-auth";
+import {isDesignerOrMore} from "@/api-auth";
 import {User} from "@auth/core/types";
 import {redirect} from "next/navigation";
 

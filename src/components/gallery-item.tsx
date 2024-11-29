@@ -2,6 +2,8 @@
 import {GalleryItem} from "@prisma/client";
 import {ReactNode, useState} from "react";
 import Image from "next/image";
+import {coordinatesToString, GalleryCoordinates, getBlueMapURL} from "@/gallery-utils";
+import Link from "next/link";
 
 export default function GalleryList({images}: { images: GalleryItem[] }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,11 +44,19 @@ export default function GalleryList({images}: { images: GalleryItem[] }) {
       <div className={'fixed top-0 left-0 w-full h-full bg-black bg-opacity-70 z-50'} onClick={() => setIsModalOpen(false)}>
         <div className={'relative m-auto top-1/2 -translate-y-1/2 bg-bgLightGray p-3 w-3/4'}
              onClick={(e) => e.stopPropagation()}>
-          <h2 className={'text-3xl font-bold text-center'}>{modalImage.title}</h2>
-          <p className={'text-lg italic text-center mb-2'}>Screenshot par {modalImage.author}</p>
           <Image src={modalImage.imagePath} alt={modalImage.title} width={1280} height={720}
                  className={'border-4 border-bgDarkGray bg-bgLightGray h-full w-full object-scale-down'}/>
-          <p className={'text-xl mt-3'}>{modalImage.description}</p>
+          <div className={'flex justify-between mt-3'}>
+            <div className={'w-1/3'}>
+              <h2 className={'text-3xl font-monocraft'}>{modalImage.title}</h2>
+              <p className={'text-lg mt-3 leading-6'}>{modalImage.description}</p>
+            </div>
+            <div className={'w-1/3 text-right '}>
+              <h3 className={'text-lg leading-6'}>Screenshot de : <span className={'font-bold'}>{modalImage.author}</span></h3>
+              <h3 className={'text-lg leading-6'}>Build par : <span className={'font-bold'}>{modalImage.builder}</span></h3>
+              <h3 className={'text-lg leading-6'}>Coordonnées : <span className={'font-bold'}>{Object.keys(modalImage.coords as object).length !== 0 ? coordinatesToString(modalImage.coords as unknown as GalleryCoordinates) : 'Inconnu'}</span> {Object.keys(modalImage.coords as object).length !== 0 && <Link href={getBlueMapURL(modalImage.coords as unknown as GalleryCoordinates)} className={'italic text-sm text-basePink hover:underline'}>(Dynmap)</Link>}</h3>
+            </div>
+          </div>
         </div>
       </div>
     )}

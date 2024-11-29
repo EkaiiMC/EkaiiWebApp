@@ -42,7 +42,7 @@ function InfoDisplay(props : {type: "home" | "other"}) {
   const size = props.type === "home" ? "h-[150px] sm:h-[90px] -top-[150px] sm:-top-[90px]" : "h-[90px] -top-[90px]";
 
   return (
-    <div className={`relative flex align-baseline bottom-0 bg-bgGray p-[10px_10px] justify-between border-t-[3px] border-t-topBorder ${size}`} >
+    <div className={`relative flex align-baseline bottom-0 bg-bgGray p-[10px] justify-between border-t-[3px] border-t-topBorder ${size}`} >
       <Suspense fallback={<ServerStatusSkeleton />}>
         <ServerStatus />
       </Suspense>

@@ -96,7 +96,9 @@ model GalleryItem {
   title       String
   description String?
   imagePath   String
-  author      String
+  author      String  @default("Inconnu")
+  builder     String  @default("Inconnu")
+  coords      Json    @default("{}")
   rank        Int
 
   createdAt DateTime @default(now())

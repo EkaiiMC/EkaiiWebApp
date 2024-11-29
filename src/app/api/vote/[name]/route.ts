@@ -99,6 +99,41 @@ export async function GET(req: NextRequest, props: { params: Promise<{ name: str
         };
       }
       break;
+    case 'serveur-minecraft.com':
+      const res3 = await fetch(`https://serveur-minecraft.com/api/1/vote/${process.env.SERVEUR_MINECRAFT_COM_SERVER_ID}/${ip}/json`);
+      const json3: {
+        vote: 1 | 0,
+        voted_at: string,
+        time_until_next_vote: number
+      } = await res3.json();
+      if (json3.vote === 0) { // User has not voted
+        voteStatus = {hasVoted: false, lastVote: lastVote?.createdAt};
+      } else {
+        voteStatus = {
+          hasVoted: true,
+          nextVote: new Date(Date.parse(json3.voted_at) + json3.time_until_next_vote * 1000),
+          lastVote: new Date(Date.parse(json3.voted_at))
+        };
+      }
+      break;
+    case 'serveurs-minecraft.org':
+      const res4 = await fetch(`https://serveurs-minecraft.org/api/is_valid_vote.php?id=${process.env.SERVEURS_MINECRAFT_ORG_SERVER_ID}&ip=${ip}&duration=10&format=json`);
+      const json4: {
+        ip: string,
+        duration: number,
+        votes: number,
+        lastVoteDate: string
+      } = await res4.json();
+      if (json4.votes === 0) { // User has not voted
+        voteStatus = {hasVoted: false, lastVote: lastVote?.createdAt};
+      } else {
+        voteStatus = {
+          hasVoted: true,
+          nextVote: new Date(Date.parse(json4.lastVoteDate) + getVotingDelta(site.title).getTime()),
+          lastVote: new Date(Date.parse(json4.lastVoteDate))
+        };
+      }
+      break;
     default:
       return NextResponse.json({message: 'Invalid site'}, { status: 400 });
   }

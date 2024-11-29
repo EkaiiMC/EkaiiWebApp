@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { GalleryCoordinates } from "@/gallery-utils";
 
 interface Picture {
   id: string;
@@ -12,6 +13,9 @@ interface Picture {
   imagePath: string;
   author: string;
   rank: string;
+  builder?: string;
+  coords?: GalleryCoordinates;
+  file?: File;
 }
 
 const ItemType = "PICTURE";
@@ -48,7 +52,7 @@ const DraggablePicture = ({ picture, index, movePicture, openModal, endDrag }: {
   );
 };
 
-const Modal = ({ modalType, currentPicture, newPicture, handleInputChange, handleSubmit, handleDelete, handleEditSubmit, setIsModalOpen, loading }: any) => {
+const Modal = ({ modalType, picture, handleInputChange, handleSubmit, handleDelete, handleEditSubmit, setIsModalOpen, loading }: any) => {
   const renderModalContent = () => (
     <form onSubmit={modalType === "add" ? handleSubmit : modalType === 'delete' ? handleDelete : handleEditSubmit} className="text-black flex flex-col flex-wrap min-w-80">
       {modalType !== "delete" && (
@@ -66,7 +70,7 @@ const Modal = ({ modalType, currentPicture, newPicture, handleInputChange, handl
             type="text"
             name="title"
             placeholder="Titre"
-            value={modalType === "add" ? newPicture.title : currentPicture?.title || ""}
+            value={picture.title}
             onChange={handleInputChange}
             required
             className="mb-2 px-1"
@@ -75,23 +79,69 @@ const Modal = ({ modalType, currentPicture, newPicture, handleInputChange, handl
             type="text"
             name="author"
             placeholder="Auteur"
-            value={modalType === "add" ? newPicture.author : currentPicture?.author || ""}
+            value={picture.author}
             onChange={handleInputChange}
             required
+            className="mb-2 px-1"
+          />
+          <input
+            type="text"
+            name="builder"
+            placeholder="Buildeur"
+            value={picture.builder || ""}
+            onChange={handleInputChange}
             className="mb-2 px-1"
           />
           <textarea
             name="description"
             placeholder="Description"
-            value={modalType === "add" ? newPicture.description : currentPicture?.description || ""}
+            value={picture.description || ""}
             onChange={handleInputChange}
             className="mb-2 h-32 px-1"
           />
+          <p className="text-baseText">Emplacement</p>
+          <div className={'w-80 flex justify-between'}>
+            <input
+              type="number"
+              name="coords_x"
+              placeholder="X"
+              value={picture.coords?.x || ""}
+              onChange={handleInputChange}
+              className="mb-2 px-1 mr-1 w-[32%]"
+            />
+            <input
+              type="number"
+              name="coords_y"
+              placeholder="Y"
+              value={picture.coords?.y || ""}
+              onChange={handleInputChange}
+              className="mb-2 px-1 mr-1 w-[32%]"
+            />
+            <input
+              type="number"
+              name="coords_z"
+              placeholder="Z"
+              value={picture.coords?.z || ""}
+              onChange={handleInputChange}
+              className="mb-2 px-1 w-[32%]"
+            />
+          </div>
+          <select
+            name="coords_dimension"
+            value={picture.coords?.dimension || ""}
+            onChange={handleInputChange}
+            className="mb-2 p-1"
+          >
+            <option value="overworld">Overworld</option>
+            <option value="nether">Nether</option>
+            <option value="end">End</option>
+          </select>
         </>
       )}
       {modalType === "delete" && <p className="text-baseText">Êtes-vous sûr de vouloir supprimer cette image ?</p>}
       <div className="flex justify-between w-full mt-4 text-baseText">
-        <button className="text-lg bg-redText hover:bg-red-600 px-2 py-1 transition-colors duration-300" onClick={() => setIsModalOpen(false)}>
+        <button className="text-lg bg-redText hover:bg-red-600 px-2 py-1 transition-colors duration-300"
+                onClick={() => setIsModalOpen(false)}>
           Annuler
         </button>
         <button type="submit" className="px-2 py-1 bg-greenText hover:bg-green-600 transition-colors duration-300">
@@ -118,8 +168,7 @@ export default function GalleryManager() {
   const [gallery, setGallery] = useState<Picture[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"add" | "edit" | "delete">("add");
-  const [currentPicture, setCurrentPicture] = useState<Picture | null>(null);
-  const [newPicture, setNewPicture] = useState<{ file: File | null; title: string; author: string; description: string; }>({ file: null, title: "", author: "", description: "" });
+  const [picture, setPicture] = useState<Picture>({ id: "", title: "", imagePath: "", author: "", rank: "" });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -135,12 +184,16 @@ export default function GalleryManager() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, files } = e.target as HTMLInputElement;
     if (files) {
-      setNewPicture((prev) => ({ ...prev, file: files[0] }));
+      setPicture((prev) => ({ ...prev, file: files[0] }));
     } else {
-      if (modalType === "add") {
-        setNewPicture((prev) => ({ ...prev, [name]: value }));
-      } else if (modalType === "edit" && currentPicture) {
-        setCurrentPicture((prev) => ({ ...prev, [name]: value } as Picture));
+      if (name.startsWith("coords_")) {
+        const key = name.split("_")[1];
+        setPicture((prev) => ({
+          ...prev,
+          coords: { ...prev.coords, [key]: key === "dimension" ? value : Number(value) }
+        }) as Picture);
+      } else {
+        setPicture((prev) => ({ ...prev, [name]: value }));
       }
     }
   };
@@ -149,10 +202,18 @@ export default function GalleryManager() {
     e.preventDefault();
     setLoading(true); // Set loading to true when request starts
     const formData = new FormData();
-    if (newPicture.file) formData.append("file", newPicture.file);
-    formData.append("title", newPicture.title);
-    formData.append("author", newPicture.author);
-    formData.append("description", newPicture.description);
+    if (picture.file) formData.append("file", picture.file);
+    formData.append("title", picture.title);
+    formData.append("author", picture.author);
+    if (picture.description) formData.append("description", picture.description);
+    if (picture.builder) formData.append("builder", picture.builder);
+    console.log(picture)
+    if (picture.coords && Object.keys(picture.coords).length > 0) {
+      formData.append("coords_x", picture.coords.x.toString());
+      formData.append("coords_y", picture.coords.y.toString());
+      formData.append("coords_z", picture.coords.z.toString());
+      formData.append("coords_dimension", picture.coords.dimension);
+    }
 
     try {
       const response = await fetch("/api/gallery", { method: "POST", body: formData });
@@ -167,10 +228,10 @@ export default function GalleryManager() {
   };
 
   const handleDelete = async () => {
-    if (!currentPicture) return;
+    if (!picture) return;
     setLoading(true); // Set loading to true when request starts
     try {
-      const response = await fetch(`/api/gallery/${currentPicture.id}`, { method: "DELETE" });
+      const response = await fetch(`/api/gallery/${picture.id}`, { method: "DELETE" });
       if (!response.ok) throw new Error("Failed to delete picture");
       await fetchGallery();
       setIsModalOpen(false);
@@ -183,15 +244,23 @@ export default function GalleryManager() {
 
   const handleEditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentPicture) return;
+    if (!picture) return;
     setLoading(true); // Set loading to true when request starts
     const formData = new FormData();
-    formData.append("title", currentPicture?.title || "");
-    formData.append("author", currentPicture?.author || "");
-    formData.append("description", currentPicture?.description || "");
+    formData.append("title", picture.title || "");
+    formData.append("author", picture.author || "");
+    formData.append("description", picture.description || "");
+    if (picture.builder) formData.append("builder", picture.builder);
+    console.log(picture)
+    if (picture.coords && Object.keys(picture.coords).length > 0) {
+      formData.append("coords_x", picture.coords.x.toString());
+      formData.append("coords_y", picture.coords.y.toString());
+      formData.append("coords_z", picture.coords.z.toString());
+      formData.append("coords_dimension", picture.coords.dimension);
+    }
 
     try {
-      const response = await fetch(`/api/gallery/${currentPicture.id}`, { method: "PATCH", body: formData });
+      const response = await fetch(`/api/gallery/${picture.id}`, { method: "PATCH", body: formData });
       if (!response.ok) throw new Error("Failed to update picture");
       await fetchGallery();
       setIsModalOpen(false);
@@ -204,7 +273,7 @@ export default function GalleryManager() {
 
   const openModal = (type: "add" | "edit" | "delete", picture?: Picture) => {
     setModalType(type);
-    setCurrentPicture(picture || null);
+    setPicture(picture || { id: "", title: "", description: "", imagePath: "", author: "", rank: ""});
     setIsModalOpen(true);
   };
 
@@ -248,8 +317,7 @@ export default function GalleryManager() {
         {isModalOpen && (
           <Modal
             modalType={modalType}
-            currentPicture={currentPicture}
-            newPicture={newPicture}
+            picture={picture}
             handleInputChange={handleInputChange}
             handleSubmit={handleSubmit}
             handleDelete={handleDelete}

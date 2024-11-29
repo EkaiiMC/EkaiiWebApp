@@ -23,8 +23,13 @@ export default async function Gallery() {
 
   return (
     <>
-      <h1
-        className={"font-monocraft text-4xl text-left shadow-underline w-4/5 md:w-1/2 p-3 pb-5 ml-auto mr-auto relative -top-10"}>Galerie</h1>
+      <div className={'w-4/5 md:w-1/2 mx-auto relative -top-10'}>
+        <h1
+          className={"font-monocraft text-4xl text-left shadow-underline p-3 pb-5 mb-5"}>Galerie</h1>
+        <p className={'text-lg'}>Découvre le monde merveilleux et plein de surprises qu&apos;est celui d&apos;Ekaii au travers des
+          yeux de nos joueurs. Des plus belles créations à la plus grande destruction, leur génie ne cessera
+          de vous surprendre. Chacun peut partager sa vision, montre nous la tienne. Clique sur les images pour avoir plus de détails.</p>
+      </div>
       <div className={'flex flex-wrap ml-auto mr-auto justify-center content-start'}>
         <GalleryList images={images}/>
       </div>

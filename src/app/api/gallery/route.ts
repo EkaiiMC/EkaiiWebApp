@@ -73,6 +73,24 @@ export async function POST(req: NextRequest) : Promise<NextResponse> {
     rank = (count + 1).toString();
   }
 
+  let builder = formData.get('builder') as string | null;
+  if (!builder) builder = 'Inconnu';
+
+  // GalleryCoords
+  let coords : any = undefined;
+  const coords_x = formData.get('coords_x') as string | null;
+  const coords_y = formData.get('coords_y') as string | null;
+  const coords_z = formData.get('coords_z') as string | null;
+  const coords_dimension = formData.get('coords_dimension') as 'overworld' | "nether" | "end" | null;
+  if (coords_x && coords_y && coords_z && coords_dimension) {
+    coords = {
+      x: parseFloat(coords_x),
+      y: parseFloat(coords_y),
+      z: parseFloat(coords_z),
+      dimension: coords_dimension
+    };
+  }
+
   const description = formData.get('description') as string | null;
 
   try {
@@ -101,6 +119,8 @@ export async function POST(req: NextRequest) : Promise<NextResponse> {
         author,
         title,
         description,
+        coords: coords,
+        builder,
         imagePath: filePath,
         rank: parseInt(rank)
       }

@@ -6,7 +6,7 @@ export async function ServerStatusSkeleton(props : {statusColor?: string, status
   return (
     <div className={'hidden sm:block h-[70px] shadow-underline overflow-clip resize-none w-[210px]'}>
       <p className={'text-lg relative top-1/2 -translate-y-1/2 text-nowrap leading-6'}>
-        Serveur : <span className={props.statusColor}>{props.statusText}</span><br />
+        Serveur : <span className={`${props.statusColor} font-bold`}>{props.statusText}</span><br />
         Joueurs connectés : <span className={'font-bold'}>{props.players}</span>
       </p>
     </div>

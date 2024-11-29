@@ -7,7 +7,7 @@ export default async function Home() {
   return (
     <Layout type={'home'}>
       <div className={"relative -top-8 w-4/5 sm:w-1/2 xl:w-1/3 p-3 pb-5 shadow-underline ml-auto mr-auto text-justify"}>
-        <h1 className={"font-monocraft text-2xl text-left"}>À Propos</h1>
+        <h1 className={"font-monocraft text-2xl text-left"}>Qui sommes nous ?</h1>
         <p className={"leading-5 mt-3 text-lg"}>
           Ekaii est la continuité d’un serveur créé pour proposer la survie Minecraft vanilla parfaite : Une communauté
           agréable, adulte pour une ambiance conviviale. Le tout sur un serveur performant sans lags et sans plugins
