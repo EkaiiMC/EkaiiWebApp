@@ -102,11 +102,11 @@ export async function GET(req: NextRequest, props: { params: Promise<{ name: str
     case 'serveur-minecraft.com':
       const res3 = await fetch(`https://serveur-minecraft.com/api/1/vote/${process.env.SERVEUR_MINECRAFT_COM_SERVER_ID}/${ip}/json`);
       const json3: {
-        vote: 1 | 0,
+        vote: "1" | "0",
         voted_at: string,
         time_until_next_vote: number
       } = await res3.json();
-      if (json3.vote === 0) { // User has not voted
+      if (json3.vote === '0') { // User has not voted
         voteStatus = {hasVoted: false, lastVote: lastVote?.createdAt};
       } else {
         voteStatus = {
@@ -121,10 +121,10 @@ export async function GET(req: NextRequest, props: { params: Promise<{ name: str
       const json4: {
         ip: string,
         duration: number,
-        votes: number,
+        votes: string,
         lastVoteDate: string
       } = await res4.json();
-      if (json4.votes === 0) { // User has not voted
+      if (json4.votes === "0") { // User has not voted
         voteStatus = {hasVoted: false, lastVote: lastVote?.createdAt};
       } else {
         voteStatus = {
