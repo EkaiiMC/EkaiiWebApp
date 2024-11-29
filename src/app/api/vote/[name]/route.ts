@@ -3,12 +3,15 @@ import prisma from "@/db";
 import ExpiryMap from "expiry-map";
 import {auth} from "@/auth";
 import {getVotingDelta} from "@/utils";
+import {logger} from "@/logger";
 
 export const dynamic = 'force-dynamic';
 
 const rateLimits : {[key : string]: ExpiryMap} = {
   'serveur-prive.net': new ExpiryMap(5000),
   'serveur-minecraft-vote.fr': new ExpiryMap(5000),
+  'serveur-minecraft.com': new ExpiryMap(5000),
+  'serveurs-minecraft.org': new ExpiryMap(5000),
 }
 
 export async function GET(req: NextRequest, props: { params: Promise<{ name: string }> }) {
@@ -67,6 +70,10 @@ export async function GET(req: NextRequest, props: { params: Promise<{ name: str
   switch (site.title) {
     case 'serveur-prive.net':
       const res = await fetch(`https://serveur-prive.net/api/v1/servers/${process.env.TOKEN_SERVEUR_PRIVE}/votes/${ip}`);
+      if (!res.ok) {
+        logger.error('Failed to fetch vote status with serveur-prive.net');
+        return NextResponse.json({message: 'Failed to fetch vote status'}, {status: 500});
+      }
       const json: {
         success: boolean,
         data?: { username: string, voted_at: number, next_vote_seconds: number }
@@ -83,6 +90,10 @@ export async function GET(req: NextRequest, props: { params: Promise<{ name: str
       break;
     case 'serveur-minecraft-vote.fr':
       const res2 = await fetch(`https://serveur-minecraft-vote.fr/api/v1/servers/${process.env.SERVEUR_MINECRAFT_VOTE_SERVER_ID}/vote/${ip}`);
+      if (!res2.ok) {
+        logger.error('Failed to fetch vote status with serveur-minecraft-vote.fr');
+        return NextResponse.json({message: 'Failed to fetch vote status'}, {status: 500});
+      }
       const json2: {
         canVote: boolean,
         waitSecond?: number,
@@ -101,6 +112,10 @@ export async function GET(req: NextRequest, props: { params: Promise<{ name: str
       break;
     case 'serveur-minecraft.com':
       const res3 = await fetch(`https://serveur-minecraft.com/api/1/vote/${process.env.SERVEUR_MINECRAFT_COM_SERVER_ID}/${ip}/json`);
+      if (!res3.ok) {
+        logger.error('Failed to fetch vote status with serveur-minecraft.com');
+        return NextResponse.json({message: 'Failed to fetch vote status'}, {status: 500});
+      }
       const json3: {
         vote: "1" | "0",
         voted_at: string,
@@ -118,6 +133,10 @@ export async function GET(req: NextRequest, props: { params: Promise<{ name: str
       break;
     case 'serveurs-minecraft.org':
       const res4 = await fetch(`https://serveurs-minecraft.org/api/is_valid_vote.php?id=${process.env.SERVEURS_MINECRAFT_ORG_SERVER_ID}&ip=${ip}&duration=10&format=json`);
+      if (!res4.ok) {
+        logger.error('Failed to fetch vote status with serveurs-minecraft.org');
+        return NextResponse.json({message: 'Failed to fetch vote status'}, {status: 500});
+      }
       const json4: {
         ip: string,
         duration: number,
