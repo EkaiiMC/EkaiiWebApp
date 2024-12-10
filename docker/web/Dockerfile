@@ -19,6 +19,7 @@ RUN npm run build
 FROM node:lts-slim AS prod
 WORKDIR /app
 RUN apt-get update && apt-get install -y openssl
+RUN yarn add global prisma
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
