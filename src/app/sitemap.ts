@@ -41,7 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: 'https://ekaii.fr/dynmap',
       lastModified: new Date(),
-      changeFrequency: 'hourly',
+      changeFrequency: 'monthly',
       priority: 0.4,
     },
   ]
