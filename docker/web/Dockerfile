@@ -18,6 +18,7 @@ RUN npm run build
 # Production image, copy all the files and run next
 FROM node:lts-slim AS prod
 WORKDIR /app
+RUN apt-get update && apt-get install -y openssl
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
