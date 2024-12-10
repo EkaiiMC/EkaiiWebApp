@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary',
+  },
+  verification: {
+    google: "ocC0RKFsdTNoczvZ1zZ_MJHolOtRfzcr2c3Z-Nl4FsU"
   }
 };
 
