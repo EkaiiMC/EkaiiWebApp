@@ -1,15 +1,13 @@
 # Adapted from https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
 # Install dependencies only when needed
-FROM node:22-alpine AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+FROM node:lts-slim AS deps
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm config set strict-ssl false # FIXME, remove this line when the issue is fixed
-RUN npm ci --legacy-peer-deps # FIXME, remove --legacy-peer-deps when react 19 releases
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 # Rebuild the source code only when needed
-FROM node:22-alpine AS builder
+FROM node:lts-slim AS builder
+RUN apt-get update && apt-get install -y openssl
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -18,7 +16,7 @@ RUN npx prisma generate                   # <---important to support Prisma quer
 RUN npm run build
 
 # Production image, copy all the files and run next
-FROM node:22-alpine AS prod
+FROM node:lts-slim AS prod
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
