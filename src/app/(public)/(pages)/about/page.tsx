@@ -35,7 +35,7 @@ export default async function About() {
         <Counter lowerBound={200} upperBound={0} content={'Resets'}/>
         <Counter lowerBound={300} upperBound={0} content={'Plugins inutiles'}/>
       </div>
-      <PinkHoverDisplay className={'lg:w-1/2 mx-auto max-lg:mx-4'} title={"Un serveur surpuissant"} text={"Hébergé sur une machine disposant des meilleurs composants disponibles sur le marché, basé sur Folia, les performances proposées par Ekaii sont considérables. Cela nous permet de proposer à nos joueurs des distances de rendu et de simulation identiques à ce que l'on peut retrouver par défaut en solo, tout en permettant aux machines redstone les plus gourmandes de fonctionner sans le moindre pépin, et surtout sans impacter l'expérience des autres joueurs."}/>
+      <PinkHoverDisplay className={'lg:w-1/2 mx-auto max-lg:mx-4'} title={"Un serveur surpuissant"} text={"Hébergé sur une machine disposant des meilleurs composants disponibles sur le marché, basé sur Folia, les performances proposées par Ekaii sont considérables. Cela nous permet de proposer à nos joueurs des distances de rendu et de simulation identiques à ce que l'on peut retrouver par défaut en solo et surtout sans impacter l'expérience des autres joueurs."}/>
       <div className={'shadow-underline w-4/5 md:w-1/2 h-1 mx-auto'} />
     </div>
   );
