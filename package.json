@@ -27,7 +27,7 @@
     "@auth/core": "^0.37.2",
     "@auth/prisma-adapter": "^2.4.1",
     "@prisma/client": "^5.22.0",
-    "bcryptjs": "^2.4.3",
+    "bcryptjs": "^3.0.2",
     "countup.js": "^2.8.0",
     "expiry-map": "^2.0.0",
     "next": "^15.0.4",
@@ -41,7 +41,7 @@
     "winston-transport": "^4.7.1"
   },
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
+    "@types/bcryptjs": "^3.0.0",
     "@types/node": "^20.14.12",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.2",
